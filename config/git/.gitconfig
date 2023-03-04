@@ -1,0 +1,5 @@
+[credential]
+  helper = store
+
+[include]
+  path = $HOME/.config/secret.gitconfig

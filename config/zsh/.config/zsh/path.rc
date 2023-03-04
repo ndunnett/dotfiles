@@ -1,0 +1,13 @@
+# ~/.zshrc
+
+# function to check if directory is in path, and add it if not
+function add_to_path() {
+  for new_path in $@; do
+    if ! grep -q "$new_path" <<< "$PATH"; then
+      export PATH=$PATH:$new_path
+    fi
+  done
+}
+
+# add common bin directories to path
+add_to_path $HOME/bin /usr/local/bin

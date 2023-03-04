@@ -1,0 +1,6 @@
+# ~/.zshrc
+
+# TODO: automatically loop file glob
+source $HOME/.config/zsh/exports.rc
+source $HOME/.config/zsh/path.rc
+source $HOME/.config/zsh/zim.rc
