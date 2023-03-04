@@ -15,6 +15,9 @@ dotfiles_dir=$( dirname -- "$( readlink -f -- "$0"; )"; )
 target_dir=$HOME
 stowed=$dotfiles_dir/.stowed
 
+# set default shell to zsh
+chsh -s $(which zsh)
+
 # check depencies
 dependencies="stow"
 . $dotfiles_dir/scripts/dependencies.sh
