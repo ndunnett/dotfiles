@@ -1,7 +1,6 @@
-zmodule eriner
-zmodule zsh-users/zsh-completions --fpath src
+zmodule romkatv/powerlevel10k
 zmodule completion
-zmodule prompt-pwd
-zmodule git-info
-zmodule zsh-users/zsh-syntax-highlighting
+zmodule ssh
+zmodule zdharma/fast-syntax-highlighting
+zmodule larkery/zsh-histdb
 zmodule zsh-users/zsh-autosuggestions

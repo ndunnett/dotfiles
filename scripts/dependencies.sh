@@ -8,7 +8,7 @@ done
 
 # determine commands to use
 case $package_manager in
-  apt) install_packages="sudo apt update && apt install -y";;
+  apt) install_packages="sudo apt update && sudo apt install -y";;
   brew) install_packages="brew update && brew install";;
 esac
 

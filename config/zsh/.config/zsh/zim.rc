@@ -5,10 +5,18 @@ zstyle ':zim:zmodule' use 'degit'
 ZIM_HOME=$HOME/.config/zsh/zim
 ZIM_CONFIG_FILE=$ZIM_HOME/.zimrc
 
-# eriner theme config
-PWD_COLOR=blue
+# Enable Powerlevel10k instant prompt
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
-# Download zimfw plugin manager if missing.
+# Load fast-syntax-highlighting
+source ${ZIM_HOME}/modules/fast-syntax-highlighting/F-Sy-H.plugin.zsh
+
+# Load Powerlevel10k config
+source $HOME/.config/zsh/p10k.zsh
+
+# Download zimfw plugin manager if missing
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
   curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
 fi
