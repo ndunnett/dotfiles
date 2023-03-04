@@ -8,8 +8,8 @@ done
 
 # determine commands to use
 case $package_manager in
-    apt) install_packages="sudo apt update && apt install -y";;
-    brew) install_packages="sudo brew update && brew install";;
+  apt) install_packages="sudo apt update && apt install -y";;
+  brew) install_packages="brew update && brew install";;
 esac
 
 # determine which dependencies need to be installed

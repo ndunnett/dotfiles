@@ -16,7 +16,9 @@ target_dir=$HOME
 stowed=$dotfiles_dir/.stowed
 
 # set default shell to zsh
-chsh -s $(which zsh)
+if ! [ $SHELL = $(which zsh) ]; then
+  chsh -s $(which zsh)
+fi
 
 # check depencies
 dependencies="stow"

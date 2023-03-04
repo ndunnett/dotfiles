@@ -11,7 +11,7 @@ fi
 # loop over templates
 for template in $(find $dotfiles_dir/secret_templates -type f); do
   # populate unset vars to .secrets
-  for var in $(cat $template | grep -oP "\\\${.*?}" | sed "s/^\${//g" | sed "s/}$//g"); do
+  for var in $(cat $template | grep -Eo "\\\${.*?}" | sed "s/^\${//g" | sed "s/}$//g"); do
     if [ -z $(eval "echo \$$var") ]; then
       read -p "$var: " $var
       echo "$var=$(eval "echo \$$var")" >> $dotfiles_dir/.secrets
