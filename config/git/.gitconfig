@@ -1,2 +1,3 @@
-[include]
-  path = .config/secret.gitconfig
+[user]
+  email = nathandunnett@me.com
+  name = ndunnett

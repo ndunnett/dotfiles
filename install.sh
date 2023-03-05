@@ -17,15 +17,12 @@ stowed=$dotfiles_dir/.stowed
 
 # set default shell to zsh
 if ! [ $SHELL = $(which zsh) ]; then
-  chsh -s $(which zsh)
+  sudo chsh -s $(which zsh)
 fi
 
 # check depencies
 dependencies="stow"
 . $dotfiles_dir/scripts/dependencies.sh
-
-# generate secret files from templates
-. $dotfiles_dir/scripts/secrets.sh
 
 # run stow script
 . $dotfiles_dir/scripts/stow.sh
