@@ -23,11 +23,18 @@ alias fgrep="fgrep --color=auto"
 alias egrep="egrep --color=auto"
 
 # Get IP addresses
-alias public_ip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias private_ip="ipconfig getifaddr en0"
+alias ip_public="dig +short myip.opendns.com @resolver1.opendns.com"
+alias ip_private="ipconfig getifaddr en0"
 
 # Reload the shell
 alias reload="exec ${SHELL} -l"
 
 # Print each PATH entry on a separate line
 alias path="echo ${PATH} | sed 's|:|\\n|g'"
+
+# Timing
+alias start_timer="eval time_start=$(print -P %D{%s%6.})"
+alias end_timer_us='echo "elapsed time: $((($(print -P %D{%s%6.})-$time_start)/1)) us"'
+alias end_timer_ms='echo "elapsed time: $((($(print -P %D{%s%6.})-$time_start)/1000)) ms"'
+alias end_timer_s='echo "elapsed time: $((($(print -P %D{%s%6.})-$time_start)/1000000)) s"'
+alias end_timer="end_timer_ms"
