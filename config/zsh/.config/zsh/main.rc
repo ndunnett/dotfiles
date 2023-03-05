@@ -3,9 +3,6 @@
 DOTFILES=$HOME/dotfiles
 ZSH_HOME=$HOME/.config/zsh
 
-# TODO: automatically loop file glob
-source $ZSH_HOME/01_exports.rc
-source $ZSH_HOME/02_path.rc
-source $ZSH_HOME/03_functions.rc
-source $ZSH_HOME/04_aliases.rc
-source $ZSH_HOME/05_plugins.rc
+for file in $(find $ZSH_HOME/* -maxdepth 0 -regex ".*[0-9][0-9].*.rc"); do
+  source $file
+done
