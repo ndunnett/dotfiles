@@ -10,12 +10,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Load fast-syntax-highlighting
-source ${ZIM_HOME}/modules/fast-syntax-highlighting/F-Sy-H.plugin.zsh
-
-# Load Powerlevel10k config
-source $HOME/.config/zsh/p10k.zsh
-
 # Download zimfw plugin manager if missing
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
   curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
@@ -25,6 +19,12 @@ fi
 if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
   source ${ZIM_HOME}/zimfw.zsh init -q
 fi
+
+# Load fast-syntax-highlighting
+source ${ZIM_HOME}/modules/fast-syntax-highlighting/F-Sy-H.plugin.zsh
+
+# Load Powerlevel10k config
+source $HOME/.config/zsh/p10k.zsh
 
 # Initialize modules.
 source ${ZIM_HOME}/init.zsh
