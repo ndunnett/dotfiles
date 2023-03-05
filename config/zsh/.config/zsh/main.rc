@@ -1,6 +1,11 @@
 # ~/.zshrc
 
+DOTFILES=$HOME/dotfiles
+ZSH_HOME=$HOME/.config/zsh
+
 # TODO: automatically loop file glob
-source $HOME/.config/zsh/exports.rc
-source $HOME/.config/zsh/path.rc
-source $HOME/.config/zsh/zim.rc
+source $ZSH_HOME/01_exports.rc
+source $ZSH_HOME/02_path.rc
+source $ZSH_HOME/03_functions.rc
+source $ZSH_HOME/04_aliases.rc
+source $ZSH_HOME/05_plugins.rc

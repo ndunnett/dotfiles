@@ -2,8 +2,8 @@
 
 # zim config
 zstyle ':zim:zmodule' use 'degit'
-ZIM_HOME=$HOME/.config/zsh/zim
-ZIM_CONFIG_FILE=$ZIM_HOME/.zimrc
+ZIM_HOME=${ZSH_HOME}/zim
+ZIM_CONFIG_FILE=${ZIM_HOME}/.zimrc
 
 # Enable Powerlevel10k instant prompt
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -24,7 +24,7 @@ fi
 source ${ZIM_HOME}/modules/fast-syntax-highlighting/F-Sy-H.plugin.zsh
 
 # Load Powerlevel10k config
-source $HOME/.config/zsh/p10k.zsh
+source ${ZSH_HOME}/p10k/p10k.zsh
 
 # Initialize modules.
 source ${ZIM_HOME}/init.zsh

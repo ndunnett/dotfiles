@@ -1,0 +1,12 @@
+# ~/.zshrc
+
+# Manage dotfiles
+function dotfiles() {
+  while test $# -gt 0; do
+    case "$1" in
+      update) eval "git --git-dir=$DOTFILES pull && zimfw update && zimfw upgrade && zimfw compile";;
+      *) echo "bad argument $1";;
+    esac
+    shift
+  done
+}
