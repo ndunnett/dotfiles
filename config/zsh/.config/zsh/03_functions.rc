@@ -2,9 +2,15 @@
 
 # Manage dotfiles
 function dotfiles() {
+  git_pull="git --git-dir=$DOTFILES/.git pull"
+  update_plugins="zimfw update"
+  update_zim="zimfw upgrade"
+  compile_plugins="zimfw compile"
+  reload="exec ${SHELL} -l"
+
   while test $# -gt 0; do
     case "$1" in
-      update) eval "git --git-dir=$DOTFILES pull && zimfw update && zimfw upgrade && zimfw compile";;
+      update) eval "$git_pull && $update_zim && $update_plugins && $compile_plugins && $reload";;
       *) echo "bad argument $1";;
     esac
     shift
