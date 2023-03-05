@@ -26,3 +26,6 @@ dependencies="stow"
 
 # run stow script
 . $dotfiles_dir/scripts/stow.sh
+
+# restart shell into zsh
+exec zsh -l
