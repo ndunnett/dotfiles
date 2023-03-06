@@ -58,13 +58,22 @@ function _dotfiles_update() {
   _dotfiles_reload_shell
 }
 
+function _dotfiles_help() {
+  echo "Valid usage: dotfiles [ reload | update | benchmark ]"
+  echo
+  echo "reload: reloads shell with \"exec \${SHELL} -l\""
+  echo "update: runs \"git pull\" for each plugin repo and the dotfiles repo, reinitialises plugins, reloads shell"
+  echo "benchmark: runs benchmark using zsh-bench"
+}
+
 function dotfiles() {
   while [ $# -gt 0 ]; do
     case "$1" in
       benchmark) _dotfiles_benchmark;;
       reload) _dotfiles_reload_shell;;
       update) _dotfiles_update;;
-      *) echo "bad argument: $1";;
+      help) _dotfiles_help;;
+      *) echo "bad argument: $1" && echo && _dotfiles_help;;
     esac
     shift
   done
