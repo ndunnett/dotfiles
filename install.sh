@@ -1,20 +1,21 @@
 #!/bin/sh
 
-# get dotfiles directory
+# get directories and filepaths
 DOTFILES_HOME=$( dirname -- "$( readlink -f -- "$0"; )"; )
 ZSH_HOME=$DOTFILES_HOME/config/zsh
-
-# save to env file
 zshenv_file=$HOME/.zshenv
+linked=$DOTFILES_HOME/.linked
+
+# insert DOTFILES_HOME and ZSH_HOME into .zshenv file
 if ! test -f $zshenv_file; then
   touch $zshenv_file
 fi
-if ! grep -q DOTFILES_HOME $zshenv_file; then
-  echo "DOTFILES_HOME=$DOTFILES_HOME" >> $zshenv_file
-fi
-if ! grep -q ZSH_HOME $zshenv_file; then
-  echo "ZSH_HOME=$ZSH_HOME" >> $zshenv_file
-fi
+for var in DOTFILES_HOME ZSH_HOME; do
+  line="$var=${!var}"
+  if ! grep -q $line $zshenv_file; then
+    echo $line >> $zshenv_file
+  fi
+done
 
 # set default shell to zsh
 if ! test $SHELL = $(which zsh); then
@@ -22,19 +23,16 @@ if ! test $SHELL = $(which zsh); then
 fi
 
 # check if .linked exists
-linked=$DOTFILES_HOME/.linked
 if test -f $linked; then
-  # delete symbolic links
+  # delete old symbolic links
   while read src dst; do
     if test -L $dst; then
       rm -f $dst
     fi
   done < $linked
 
-  # clear .linked
   truncate -s 0 $linked
 else
-  # create .linked
   touch $linked
 fi
 
@@ -44,10 +42,18 @@ for src in $(find $DOTFILES_HOME/linked -type f); do
   echo "$src $dst" >> $linked
 done
 
-# delete existing files and create new symlink
+# distribute linked files
 while read src dst; do
+  # delete existing symlink
+  if test -L $dst; then
+    rm -f $dst
+  fi
+
+  # backup existing file
   if test -e $dst; then
     mv $dst $dst\.old
   fi
+
+  # create new symlink
   ln -sf $src $dst
 done < $linked
