@@ -50,6 +50,16 @@ function _dotfiles_update() {
   # pull dotfiles repo
   git -C $DOTFILES_HOME pull
 
+  # rebuild plugins/init.zsh
+  if [[ ! -e $plugins_home/init.zsh ]]; then
+    touch $plugins_home/init.zsh
+  else
+    truncate -s 0 $plugins_home/init.zsh
+  fi
+  for plugin in $dotfiles_plugins; do
+    echo "source $plugins_home/$(echo ${plugin%/*})_$(basename $plugin)/init.zsh" >> $plugins_home/init.zsh
+  done
+
   # recompile files
   for file in $(find $DOTFILES_HOME/config/zsh -type f -regex ".*\.zsh"); do
     zcompile -R -- $file.zwc $file
@@ -80,14 +90,7 @@ function dotfiles() {
 }
 
 # load plugins
-for plugin in $dotfiles_plugins; do
-  plugin_dir=$plugins_home/$(echo ${plugin%/*})_$(basename $plugin)
-  init_file=$plugin_dir/init.zsh
-  fpath+=$plugin_dir
-
-  if [[ ! -e $init_file ]]; then
-    _dotfiles_update
-  fi
-
-  source $init_file
-done
+if [[ ! -e $plugins_home/init.zsh ]]; then
+  _dotfiles_update
+fi
+source $plugins_home/init.zsh
