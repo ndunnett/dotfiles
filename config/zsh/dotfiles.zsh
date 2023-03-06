@@ -1,12 +1,16 @@
+#!/bin/zsh
+
 plugins_home=$ZSH_HOME/plugins
 
 function _dotfiles_benchmark() {
+  # download zsh-bench
   if [[ ! -d $plugins_home/zsh-bench ]]; then
     git clone --depth 1 https://github.com/romkatv/zsh-bench $plugins_home/zsh-bench
   else
     git --git-dir="$plugins_home/zsh-bench/.git" pull
   fi
 
+  # run zsh-bench
   zsh $plugins_home/zsh-bench/zsh-bench
 }
 
@@ -15,7 +19,6 @@ function _dotfiles_reload_shell() {
 }
 
 function _dotfiles_init_plugin() {
-  # loop through plugins
   for plugin in $@; do
     plugin_dir=$plugins_home/$(echo ${plugin%/*})_$(basename $plugin)
 
@@ -34,7 +37,6 @@ function _dotfiles_init_plugin() {
 }
 
 function _dotfiles_update() {
-  # loop through plugins
   for plugin in $dotfiles_plugins; do
     plugin_dir=$plugins_home/$(echo ${plugin%/*})_$(basename $plugin)
 
@@ -51,7 +53,7 @@ function _dotfiles_update() {
   done
 
   # pull dotfiles repo
-  git --git-dir="$DOTFILES/.git" pull
+  git --git-dir="$DOTFILES_HOME/.git" pull
 
   _dotfiles_reload_shell
 }

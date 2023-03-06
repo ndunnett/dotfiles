@@ -1,2 +1,2 @@
-config/zsh/.config/zsh/plugins
-.stowed
+config/zsh/plugins
+.linked
