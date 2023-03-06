@@ -52,6 +52,3 @@ while read src dst; do
   fi
   ln -sf $src $dst
 done < $linked
-
-# restart shell into zsh
-exec zsh -l
