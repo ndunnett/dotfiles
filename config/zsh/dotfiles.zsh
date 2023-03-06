@@ -61,7 +61,7 @@ function _dotfiles_update() {
 function _dotfiles_help() {
   echo "Valid usage: dotfiles [ reload | update | benchmark ]"
   echo
-  echo "reload: reloads shell with \"exec \${SHELL} -l\""
+  echo "reload: reloads shell with \"exec zsh -l\""
   echo "update: runs \"git pull\" for each plugin repo and the dotfiles repo, recompiles, reloads shell"
   echo "benchmark: runs benchmark using zsh-bench"
 }

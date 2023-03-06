@@ -15,7 +15,7 @@ The `dotfiles.zsh` file in `config/zsh` is what drives the plugin management. On
 - [zsh-users/zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions): fish-like autosuggestions
 
 ### `dotfiles` command
-- `dotfiles reload`: reloads shell with `exec ${SHELL} -l`
+- `dotfiles reload`: reloads shell with `exec zsh -l`
 - `dotfiles update`: runs `git pull` for each plugin repo and the dotfiles repo, reinitialises plugins, reloads shell
 - `dotfiles benchmark`: runs benchmark using [zsh-bench](https://github.com/romkatv/zsh-bench)
 - `dotfiles help`: prints valid commands with brief explanation to terminal
