@@ -5,7 +5,7 @@ Running `install.sh` dynamically manages symbolic links using `ln` based on the 
 
 The `.zshrc` file in `linked` will be symbolically linked to the location of your existing `.zshrc`, and will dynamically source all `*.rc` files within `config/zsh` with a two digit prefix, ie. `01_config.rc`. These files are where you should put your custom zsh configuration.
 
-The `dotfiles.zsh` file in `config/zsh` is what drives the plugin management. 
+The `dotfiles.zsh` file in `config/zsh` is what drives the plugin management. On initialisation, each plugin is shallow `git clone`d and the entry point is symbolically linked to `init.zsh`. The list of plugins is defined by variable `dotfiles_plugins` which is an array of GitHub repositories following the format `<author>/<repository>`. This variable is currently defined in `05_plugins.rc`.
 
 ### Shell plugins
 - [romkatv/powerlevel10k](https://github.com/romkatv/powerlevel10k): nice theme with good performance
