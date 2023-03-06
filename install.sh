@@ -19,7 +19,6 @@ fi
 # set default shell to zsh
 if ! test $SHELL = $(which zsh); then
   sudo chsh -s $(which zsh)
-  echo test
 fi
 
 # check if .linked exists
