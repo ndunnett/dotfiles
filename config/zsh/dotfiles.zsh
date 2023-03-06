@@ -33,6 +33,9 @@ function _dotfiles_init_plugin() {
       (( $#init_candidates )) || { echo >&2 "No init file found for $plugin." && continue }
       ln -sf ${init_candidates[1]} $plugin_dir/init.zsh
     fi
+
+    # compile
+    zcompile -R -- $plugin_dir/init.zsh.zwc $plugin_dir/init.zsh
   done
 }
 
@@ -54,6 +57,9 @@ function _dotfiles_update() {
 
   # pull dotfiles repo
   git --git-dir="$DOTFILES_HOME/.git" pull
+
+  # recompile dotfilex.zsh
+  zcompile -R -- $ZSH_HOME/dotfiles.zsh.zwc $ZSH_HOME/dotfiles.zsh
 
   _dotfiles_reload_shell
 }
@@ -81,7 +87,9 @@ function dotfiles() {
 
 # load plugins
 for plugin in $dotfiles_plugins; do
-  init_file=$plugins_home/$(echo ${plugin%/*})_$(basename $plugin)/init.zsh
+  plugin_dir=$plugins_home/$(echo ${plugin%/*})_$(basename $plugin)
+  init_file=$plugin_dir/init.zsh
+  fpath+=$plugin_dir
 
   if [[ ! -e $init_file ]]; then
     _dotfiles_init_plugin $plugin
