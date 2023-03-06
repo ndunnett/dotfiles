@@ -1,8 +1,2 @@
-# repo temp/personal files
+config/zsh/.config/zsh/plugins
 .stowed
-.secrets
-secret
-
-# zim
-**/zsh/zim/*
-!.zimrc

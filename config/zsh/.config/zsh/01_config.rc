@@ -2,3 +2,5 @@
 
 export EDITOR="nano"
 export TIMEFMT=$'real\t%uE\nuser\t%uU\nsys\t%uS'
+setopt HISTIGNOREDUPS
+setopt HISTIGNORESPACE

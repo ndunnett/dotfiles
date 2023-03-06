@@ -1,5 +1,0 @@
-zmodule romkatv/powerlevel10k
-zmodule completion
-zmodule ssh
-zmodule zdharma/fast-syntax-highlighting
-zmodule zsh-users/zsh-autosuggestions
