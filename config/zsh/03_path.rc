@@ -4,12 +4,11 @@
 add_to_path $HOME/bin /usr/local/bin
 
 # add homebrew paths if on macOS
-if [[ $(uname) == "Darwin" ]]; then
-  if [[ $(uname -m) == "arm64" ]]; then
-    HOMEBREW_PREFIX="/opt/homebrew"
-  else
-    HOMEBREW_PREFIX="/usr/local"
-  fi
+if [[ $KERNEL_NAME == "darwin" ]]; then
+  case $(uname -m) in
+    arm64) HOMEBREW_PREFIX="/opt/homebrew";;
+    *) HOMEBREW_PREFIX="/usr/local";;
+  esac
 
   add_to_path $HOMEBREW_PREFIX/bin $HOMEBREW_PREFIX/sbin
 fi

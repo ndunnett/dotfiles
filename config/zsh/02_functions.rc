@@ -2,8 +2,6 @@
 
 function add_to_path() {
   for new_path in $@; do
-    if ! grep -q "$new_path" <<< "$PATH"; then
-      export PATH=$PATH:$new_path
-    fi
+    [[ ":$PATH:" != *":$new_path:"* ]] && PATH="${PATH}:$new_path"
   done
 }
