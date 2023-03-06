@@ -34,12 +34,17 @@ function _dotfiles_init_plugin() {
       ln -sf ${init_candidates[1]} $plugin_dir/init.zsh
     fi
 
-    # compile
-    zcompile -R -- $plugin_dir/init.zsh.zwc $plugin_dir/init.zsh
+    # # compile
+    # zcompile -R -- $plugin_dir/init.zsh.zwc $plugin_dir/init.zsh
   done
 }
 
 function _dotfiles_update() {
+  # delete compiled files
+  for file in $(find $DOTFILES_HOME/config/zsh -type f -regex ".*\.zwc"); do
+    rm -f $file
+  done
+
   for plugin in $dotfiles_plugins; do
     plugin_dir=$plugins_home/$(echo ${plugin%/*})_$(basename $plugin)
 
@@ -58,8 +63,10 @@ function _dotfiles_update() {
   # pull dotfiles repo
   git --git-dir="$DOTFILES_HOME/.git" pull
 
-  # recompile dotfilex.zsh
-  zcompile -R -- $ZSH_HOME/dotfiles.zsh.zwc $ZSH_HOME/dotfiles.zsh
+  # recompile files
+  for file in $(find $DOTFILES_HOME/config/zsh -type f -regex ".*\.zsh"); do
+    zcompile -R -- $file.zwc $file
+  done
 
   _dotfiles_reload_shell
 }
@@ -97,3 +104,8 @@ for plugin in $dotfiles_plugins; do
 
   source $init_file
 done
+
+# make sure dotfiles.zsh is compiled
+if [[ ! -e $ZSH_HOME/dotfiles.zsh.zwc ]]; then
+  zcompile -R -- $ZSH_HOME/dotfiles.zsh.zwc $ZSH_HOME/dotfiles.zsh
+fi
