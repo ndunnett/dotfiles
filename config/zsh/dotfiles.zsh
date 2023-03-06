@@ -7,7 +7,7 @@ function _dotfiles_benchmark() {
   if [[ ! -d $plugins_home/zsh-bench ]]; then
     git clone --depth 1 https://github.com/romkatv/zsh-bench $plugins_home/zsh-bench
   else
-    git --git-dir="$plugins_home/zsh-bench/.git" pull
+    git -C $plugins_home/zsh-bench pull
   fi
 
   # run zsh-bench
@@ -15,28 +15,7 @@ function _dotfiles_benchmark() {
 }
 
 function _dotfiles_reload_shell() {
-  exec ${SHELL} -l
-}
-
-function _dotfiles_init_plugin() {
-  for plugin in $@; do
-    plugin_dir=$plugins_home/$(echo ${plugin%/*})_$(basename $plugin)
-
-    # download plugin repo
-    if [[ ! -d $plugin_dir ]]; then
-      git clone --depth 1 https://github.com/$plugin.git $plugin_dir
-    fi
-
-    # find zsh file for plugin and make symlink if it isn't init.zsh
-    if [[ ! -e $plugin_dir/init.zsh ]]; then
-      init_candidates=($plugin_dir/*.plugin.{z,}sh(N) $plugin_dir/*.{z,}sh{-theme,}(N))
-      (( $#init_candidates )) || { echo >&2 "No init file found for $plugin." && continue }
-      ln -sf ${init_candidates[1]} $plugin_dir/init.zsh
-    fi
-
-    # # compile
-    # zcompile -R -- $plugin_dir/init.zsh.zwc $plugin_dir/init.zsh
-  done
+  exec zsh -l
 }
 
 function _dotfiles_update() {
@@ -53,15 +32,23 @@ function _dotfiles_update() {
       rm $plugin_dir/init.zsh
     fi
 
-    # pull plugin repo
-    git --git-dir="$plugin_dir/.git" pull
+    # pull/download plugin repo
+    if [[ ! -d $plugin_dir ]]; then
+      git clone --depth 1 https://github.com/$plugin.git $plugin_dir
+    else
+      git -C $plugin_dir pull
+    fi
 
-    # reinitialise plugin
-    _dotfiles_init_plugin $plugin
+    # find zsh file for plugin and make symlink if it isn't init.zsh
+    if [[ ! -e $plugin_dir/init.zsh ]]; then
+      init_candidates=($plugin_dir/*.plugin.{z,}sh(N) $plugin_dir/*.{z,}sh{-theme,}(N))
+      (( $#init_candidates )) || { echo >&2 "No init file found for $plugin." && continue }
+      ln -sf ${init_candidates[1]} $plugin_dir/init.zsh
+    fi
   done
 
   # pull dotfiles repo
-  git --git-dir="$DOTFILES_HOME/.git" pull
+  git -C $DOTFILES_HOME pull
 
   # recompile files
   for file in $(find $DOTFILES_HOME/config/zsh -type f -regex ".*\.zsh"); do
@@ -75,7 +62,7 @@ function _dotfiles_help() {
   echo "Valid usage: dotfiles [ reload | update | benchmark ]"
   echo
   echo "reload: reloads shell with \"exec \${SHELL} -l\""
-  echo "update: runs \"git pull\" for each plugin repo and the dotfiles repo, reinitialises plugins, reloads shell"
+  echo "update: runs \"git pull\" for each plugin repo and the dotfiles repo, recompiles, reloads shell"
   echo "benchmark: runs benchmark using zsh-bench"
 }
 
@@ -99,13 +86,8 @@ for plugin in $dotfiles_plugins; do
   fpath+=$plugin_dir
 
   if [[ ! -e $init_file ]]; then
-    _dotfiles_init_plugin $plugin
+    _dotfiles_update
   fi
 
   source $init_file
 done
-
-# make sure dotfiles.zsh is compiled
-if [[ ! -e $ZSH_HOME/dotfiles.zsh.zwc ]]; then
-  zcompile -R -- $ZSH_HOME/dotfiles.zsh.zwc $ZSH_HOME/dotfiles.zsh
-fi
