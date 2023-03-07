@@ -9,4 +9,4 @@ test $SHELL != $zsh_path || sudo chsh -s $zsh_path
 
 # link files
 DOTFILES_HOME=$( dirname -- "$( readlink -f -- "$0"; )"; )
-zsh $DOTFILES_HOME/scripts/link_files.sh $DOTFILES_HOME
+zsh $DOTFILES_HOME/scripts/link_files.zsh $DOTFILES_HOME
