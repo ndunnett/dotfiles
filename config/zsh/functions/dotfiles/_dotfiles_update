@@ -1,0 +1,58 @@
+#!/bin/zsh
+
+function _dotfiles_update() {
+  for plugin in $dotfiles_plugins; do
+    plugin_dir="$ZSH_HOME/plugins/$plugin"
+
+    # remove symlink to init.zsh if it exists
+    [[ -L "$plugin_dir/init.zsh" ]] && rm "$plugin_dir/init.zsh"
+
+    # pull/download plugin repo
+    if [[ -d $plugin_dir ]]; then
+      git -C $plugin_dir pull -q
+    else
+      git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/$plugin.git" $plugin_dir
+    fi
+
+    # find zsh file for plugin and make symlink if it isn't init.zsh
+    if [[ ! -e "$plugin_dir/init.zsh" ]]; then
+      init_candidates=($plugin_dir/*.plugin.{z,}sh(N) $plugin_dir/*.{z,}sh{-theme,}(N))
+      (( $#init_candidates )) || { echo >&2 "no init file found for $plugin!" && continue }
+      ln -sf "${init_candidates[1]}" "$plugin_dir/init.zsh"
+    fi
+  done
+
+  # download zsh-bench
+  if [[ -d "$ZSH_HOME/plugins/zsh-bench" ]]; then
+    git -C "$ZSH_HOME/plugins/zsh-bench" pull -q
+  else
+    git clone -q --depth 1 --recursive --shallow-submodules https://github.com/romkatv/zsh-bench "$ZSH_HOME/plugins/zsh-bench"
+  fi
+
+  # pull dotfiles repo
+  git -C $DOTFILES_HOME pull -q
+
+  # rebuild plugins/init.zsh
+  if [[ -e "$ZSH_HOME/plugins/init.zsh" ]]; then
+    truncate -s 0 "$ZSH_HOME/plugins/init.zsh"
+  else
+    touch "$ZSH_HOME/plugins/init.zsh"
+  fi
+  for plugin in $dotfiles_plugins; do
+    echo "source $ZSH_HOME/plugins/$plugin/init.zsh" >> "$ZSH_HOME/plugins/init.zsh"
+  done
+
+  # rebuild functions/init.zsh
+  if [[ -e "$ZSH_HOME/functions/init.zsh" ]]; then
+    truncate -s 0 "$ZSH_HOME/functions/init.zsh"
+  else
+    touch "$ZSH_HOME/functions/init.zsh"
+  fi
+  echo 'fpath=($(find "$ZSH_HOME/functions" -type d) "${fpath[@]}")' >> "$ZSH_HOME/functions/init.zsh"
+  for function_file in $(find "$ZSH_HOME/functions" -type f ! -name "*.*"); do
+    echo "autoload -Uz $function_file" >> "$ZSH_HOME/functions/init.zsh"
+  done
+
+  dotfiles compile
+  dotfiles reload
+}

@@ -1,0 +1,22 @@
+#!/bin/zsh
+
+_timer_start_time="init"
+
+function timer() {
+  case "$1" in
+    (start)
+      _timer_start_time=$(print -P %D{%s%6.})
+      echo "[timer] start timing"
+    ;;
+
+    (time)
+      [[ $_timer_start_time != "init" ]] && echo "[timer] elapsed time: $((($(print -P %D{%s%6.})-$_timer_start_time)/1000)) ms"
+    ;;
+
+    (*)
+      echo "[timer] bad argument: $1"
+    ;;
+  esac
+}
+
+timer $1

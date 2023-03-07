@@ -1,6 +1,6 @@
-# ~/.zshrc
+#!/bin/zsh
 
-function add_to_path() {
+function append_path() {
   for new_path in $@; do
     [[ ":$PATH:" != *":$new_path:"* ]] && PATH="${PATH}:$new_path"
   done

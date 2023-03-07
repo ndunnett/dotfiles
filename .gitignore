@@ -1,3 +1,4 @@
+config/zsh/functions/init.zsh
 config/zsh/plugins
 .linked
 *.zwc

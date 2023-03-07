@@ -1,0 +1,10 @@
+#!/bin/zsh
+
+function _dotfiles_compile() {
+  # I hate this but it works: finds all function files (no extension) and all plugin files (.zsh/.zsh-theme)
+  for file in $(echo $(echo "$(find "$DOTFILES_HOME/config/zsh/functions" -type f ! -name "*.*") $(echo $DOTFILES_HOME/config/zsh/plugins/**/*.zsh{,-theme})")); do
+    # delete compiled file if it's older than the source then compile
+    [[ "$file.zwc" -ot $file ]] && rm -f "$file.zwc"
+    [[ -e "$file.zwc" ]] || zcompile $file
+  done
+}

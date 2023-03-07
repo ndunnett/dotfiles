@@ -1,0 +1,38 @@
+#!/bin/zsh
+
+function dotfiles() {
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      (benchmark)
+        zsh "$ZSH_HOME/plugins/zsh-bench/zsh-bench"
+      ;;
+
+      (reload)
+        exec zsh -l
+      ;;
+
+      (compile)
+        _dotfiles_compile
+      ;;
+      
+      (update)
+        _dotfiles_update
+      ;;
+
+      (help) 
+        echo "Valid usage: dotfiles [ reload | update | benchmark ]"
+        echo
+        echo "reload: reloads shell with \"exec zsh -l\""
+        echo "compile: recompiles all *.zsh files under config/zsh"
+        echo "update: runs \"git pull\" for each plugin repo and the dotfiles repo, recompiles, reloads shell"
+        echo "benchmark: runs benchmark using zsh-bench"
+      ;;
+
+      (*)
+        echo "Bad argument: $1"
+        dotfiles help
+      ;;
+    esac
+    shift
+  done
+}

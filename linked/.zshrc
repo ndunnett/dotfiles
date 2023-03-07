@@ -1,5 +1,10 @@
-# ~/.zshrc
+#!/bin/zsh
 
-for file in $(find $DOTFILES_HOME/config/zsh/* -maxdepth 0 -regex ".*[0-9][0-9].*.rc"); do
+# load functions
+[[ -e "$ZSH_HOME/functions/init.zsh" ]] || dotfiles update
+source "$ZSH_HOME/functions/init.zsh"
+
+# source configuration scripts
+for file in $ZSH_HOME/<0-100>*.*; do
   source $file
 done
