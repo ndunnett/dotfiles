@@ -1,6 +1,8 @@
 #!/bin/zsh
 
 function _dotfiles_init_plugins() {
+  echo "[dotfiles] initialising plugins"
+
   # clear init.zsh
   if [[ -e "$ZSH_HOME/plugins/init.zsh" ]]; then
     truncate -s 0 "$ZSH_HOME/plugins/init.zsh"
@@ -15,10 +17,16 @@ function _dotfiles_init_plugins() {
 
     # in init.zsh: source plugin
     echo "source ${init_candidates[1]}" >> "$ZSH_HOME/plugins/init.zsh"
+
+    # compile plugin files
+    echo "[dotfiles] compiling $plugin"
+    for plugin_file in $ZSH_HOME/plugins/**/*.{sh,zsh,zsh-theme}; do
+      _dotfiles_compile_file $plugin_file
+    done
   done
 
-  # compile plugin files
-  for plugin_file in $ZSH_HOME/plugins/**/*.{sh,zsh,zsh-theme}; do
-    _dotfiles_compile_file $plugin_file
-  done
+  # compile init file
+  _dotfiles_compile_file "$ZSH_HOME/plugins/init.zsh"
+
+  echo "[dotfiles] plugins initialised"
 }

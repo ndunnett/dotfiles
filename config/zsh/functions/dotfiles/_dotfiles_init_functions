@@ -1,6 +1,8 @@
 #!/bin/zsh
 
 function _dotfiles_init_functions() {
+  echo "[dotfiles] initialising functions"
+
   # clear init.zsh
   if [[ -e "$ZSH_HOME/functions/init.zsh" ]]; then
     truncate -s 0 "$ZSH_HOME/functions/init.zsh"
@@ -19,8 +21,12 @@ function _dotfiles_init_functions() {
     echo "autoload -Uz $function_file" >> "$ZSH_HOME/functions/init.zsh"
 
     # compile function
+    echo "[dotfiles] compiling $function_file"
     _dotfiles_compile_file $function_file
   done
 
+  # compile init file
   _dotfiles_compile_file "$ZSH_HOME/functions/init.zsh"
+
+  echo "[dotfiles] functions initialised"
 }

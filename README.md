@@ -63,9 +63,7 @@ Results from benchmarking with [zsh-bench](https://github.com/romkatv/zsh-bench)
 # TODO
 - Setup font management
 - Setup SSH teleportation
-- Improve `dotfiles update` to check status of repo before pulling
 - Setup automatic updates
-- Add some logging and tidy up output to terminal
 - Make script idempotent
 - Refine list of plugins to use
 - Populate config with more improvements

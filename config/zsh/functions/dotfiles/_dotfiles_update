@@ -1,0 +1,36 @@
+#!/bin/zsh
+
+function _dotfiles_update() {
+  echo "[dotfiles] checking for updates"
+
+  for plugin in $dotfiles_plugins; do
+    # check plugins
+    echo "[dotfiles] checking $plugin..."
+    if [[ ! -d "$ZSH_HOME/plugins/$plugin" ]]; then
+      echo "[dotfiles] plugin directory doesn't exist, cloning repo"
+      git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/$plugin.git" "$ZSH_HOME/plugins/$plugin"
+      changes_made="yes"
+    elif ! git -C "$ZSH_HOME/plugins/$plugin" diff-index --quiet HEAD; then
+      echo "[dotfiles] $plugin out of date, pulling repo"
+      git -C "$ZSH_HOME/plugins/$plugin" pull -q
+      changes_made="yes"
+    fi
+  done
+
+  # check dotfiles repo
+  echo "[dotfiles] checking dotfiles repo..."
+  if ! git -C "$DOTFILES_HOME" diff-index --quiet HEAD; then
+    echo "[dotfiles] dotfiles out of date, pulling repo"
+    git -C $DOTFILES_HOME pull -q
+    changes_made="yes"
+  fi
+
+  # reinit functions and plugins then reload
+  if [[ -v changes_made ]]; then
+    _dotfiles_init_functions && _dotfiles_init_plugins
+    echo "[dotfiles] finished updating"
+    dotfiles reload
+  else
+    echo "[dotfiles] finished updating, no changes made"
+  fi
+}

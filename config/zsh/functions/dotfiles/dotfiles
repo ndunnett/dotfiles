@@ -4,14 +4,23 @@ function dotfiles() {
   while [ $# -gt 0 ]; do
     case "$1" in
       (benchmark)
+        if [[ ! -d "$ZSH_HOME/plugins/zsh-bench" ]]; then
+          echo "[dotfiles] zsh-bench not found, cloning repo"
+          git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/romkatv/zsh-bench.git" "$ZSH_HOME/plugins/zsh-bench"
+        elif ! git -C "$ZSH_HOME/plugins/zsh-bench" diff-index --quiet HEAD; then
+          echo "[dotfiles] zsh-bench out of date, pulling repo"
+          git -C "$ZSH_HOME/plugins/zsh-bench" pull -q
+        fi
         zsh "$ZSH_HOME/plugins/zsh-bench/zsh-bench"
       ;;
 
       (reload)
+        echo "[dotfiles] reloading shell"
         exec zsh -l
       ;;
 
       (flush)
+        echo "[dotfiles] flushing dotfiles"
         rm -rf $ZSH_HOME/plugins
         rm -f $ZSH_HOME/functions/init.zsh
         rm -f $ZSH_HOME/**/*.zwc
@@ -19,6 +28,7 @@ function dotfiles() {
       ;;
 
       (recompile)
+        echo "[dotfiles] removing compiled files"
         rm -f $ZSH_HOME/plugins/init.zsh
         rm -f $ZSH_HOME/functions/init.zsh
         rm -f $ZSH_HOME/**/*.zwc
@@ -35,27 +45,7 @@ function dotfiles() {
       ;;
 
       (update)
-        for plugin in $dotfiles_plugins; do
-          # pull/download plugin repo
-          if [[ -d "$ZSH_HOME/plugins/$plugin" ]]; then
-            git -C "$ZSH_HOME/plugins/$plugin" pull -q
-          else
-            git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/$plugin.git" "$ZSH_HOME/plugins/$plugin"
-          fi
-        done
-
-        # download zsh-bench
-        if [[ -d "$ZSH_HOME/plugins/zsh-bench" ]]; then
-          git -C "$ZSH_HOME/plugins/zsh-bench" pull -q
-        else
-          git clone -q --depth 1 --recursive --shallow-submodules https://github.com/romkatv/zsh-bench "$ZSH_HOME/plugins/zsh-bench"
-        fi
-
-        # pull dotfiles repo
-        git -C $DOTFILES_HOME pull -q
-
-        # reinit functions and plugins then reload
-        _dotfiles_init_functions && _dotfiles_init_plugins && dotfiles reload
+        _dotfiles_update
       ;;
 
       (help)
