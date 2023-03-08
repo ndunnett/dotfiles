@@ -15,8 +15,4 @@ export dotfiles_plugins=(
 )
 
 # load plugins
-[[ -e "$ZSH_HOME/plugins/init.zsh" ]] || dotfiles update
-source "$ZSH_HOME/plugins/init.zsh"
-
-# load Powerlevel10k config
-source "$ZSH_HOME/p10k.zsh"
+dotfiles load_plugins

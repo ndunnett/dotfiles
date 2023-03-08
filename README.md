@@ -3,9 +3,7 @@ Designed to use across any unix system compatible with zsh, only actually tested
 
 Running `install.sh` dynamically manages symbolic links using `ln` based on the contents of `linked` (it will map the file structure to your `$HOME` directory) and writes the required environment variables to `.zshenv`. Existing files that conflict with linked files will be renamed to have `.old` as a suffix.
 
-The `.zshrc` file in `linked` will be symbolically linked to the location of your existing `.zshrc`, and will dynamically source all `*.rc` files within `config/zsh` with a two digit prefix, ie. `01_config.rc`. These files are where you should put your custom zsh configuration.
-
-The `dotfiles.zsh` file in `config/zsh` is what drives the plugin management. On initialisation, each plugin is shallow `git clone`d and the entry point is symbolically linked to `init.zsh`, and all `*.zsh` files are compiled. The list of plugins is defined by variable `dotfiles_plugins` which is an array of GitHub repositories following the format `<author>/<repository>`. This variable is currently defined in `05_plugins.rc`.
+Functions defined within the `config/zsh/functions` directory will be automatically compiled and autoloaded at the start of `~/.zshrc`. All files prefixed with a number within `config/zsh` (ie. `01_config.zsh`) will be sourced in order, these files are where all custom configuration should be defined. An array of GitHub repositories with format `<author>/<name>` should be exported as `dotfiles_plugins` before calling `dotfiles load_plugins` to automatically manage plugin loading.
 
 ### Shell plugins
 - [romkatv/powerlevel10k](https://github.com/romkatv/powerlevel10k): nice theme with good performance
@@ -15,10 +13,7 @@ The `dotfiles.zsh` file in `config/zsh` is what drives the plugin management. On
 - [zsh-users/zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions): fish-like autosuggestions
 
 ### `dotfiles` command
-- `dotfiles reload`: reloads shell with `exec zsh -l`
-- `dotfiles update`: runs `git pull` for each plugin repo and the dotfiles repo, reinitialises plugins, reloads shell
-- `dotfiles benchmark`: runs benchmark using [zsh-bench](https://github.com/romkatv/zsh-bench)
-- `dotfiles help`: prints valid commands with brief explanation to terminal
+- Work in progress, see [config/zsh/functions/dotfiles/dotfiles](https://github.com/ndunnett/dotfiles/blob/master/config/zsh/functions/dotfiles/dotfiles)
 
 # Install
 ### Manual
@@ -68,8 +63,6 @@ Results from benchmarking with [zsh-bench](https://github.com/romkatv/zsh-bench)
 # TODO
 - Setup font management
 - Setup SSH teleportation
-- Optimise `dotfiles.zsh` for performance
-- Check if files changed before recompiling
 - Improve `dotfiles update` to check status of repo before pulling
 - Setup automatic updates
 - Add some logging and tidy up output to terminal

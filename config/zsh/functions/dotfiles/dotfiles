@@ -11,26 +11,60 @@ function dotfiles() {
         exec zsh -l
       ;;
 
-      (compile)
-        _dotfiles_compile
-      ;;
-      
-      (update)
-        _dotfiles_update
+      (flush)
+        rm -rf $ZSH_HOME/plugins
+        rm -f $ZSH_HOME/functions/init.zsh
+        rm -f $ZSH_HOME/**/*.zwc
+        dotfiles reload
       ;;
 
-      (help) 
-        echo "Valid usage: dotfiles [ reload | update | benchmark ]"
-        echo
-        echo "reload: reloads shell with \"exec zsh -l\""
-        echo "compile: recompiles all *.zsh files under config/zsh"
-        echo "update: runs \"git pull\" for each plugin repo and the dotfiles repo, recompiles, reloads shell"
-        echo "benchmark: runs benchmark using zsh-bench"
+      (recompile)
+        rm -f $ZSH_HOME/plugins/init.zsh
+        rm -f $ZSH_HOME/functions/init.zsh
+        rm -f $ZSH_HOME/**/*.zwc
+        _dotfiles_init_functions
+        _dotfiles_init_plugins
+        dotfiles reload
+      ;;
+
+      (load_plugins)
+        [[ -v dotfiles_plugins ]] || echo >&2 "[dotfiles] plugins not defined!"
+        [[ -d "$ZSH_HOME/plugins" ]] || dotfiles update
+        [[ -e "$ZSH_HOME/plugins/init.zsh" ]] || _dotfiles_init_plugins
+        source "$ZSH_HOME/plugins/init.zsh"
+      ;;
+
+      (update)
+        for plugin in $dotfiles_plugins; do
+          # pull/download plugin repo
+          if [[ -d "$ZSH_HOME/plugins/$plugin" ]]; then
+            git -C "$ZSH_HOME/plugins/$plugin" pull -q
+          else
+            git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/$plugin.git" "$ZSH_HOME/plugins/$plugin"
+          fi
+        done
+
+        # download zsh-bench
+        if [[ -d "$ZSH_HOME/plugins/zsh-bench" ]]; then
+          git -C "$ZSH_HOME/plugins/zsh-bench" pull -q
+        else
+          git clone -q --depth 1 --recursive --shallow-submodules https://github.com/romkatv/zsh-bench "$ZSH_HOME/plugins/zsh-bench"
+        fi
+
+        # pull dotfiles repo
+        git -C $DOTFILES_HOME pull -q
+
+        # reinit functions and plugins then reload
+        _dotfiles_init_functions && _dotfiles_init_plugins && dotfiles reload
+      ;;
+
+      (help)
+        echo "[dotfiles] valid usage: dotfiles [ reload | load_plugins | update | flush | recompile | benchmark ]"
+        echo "[dotfiles] work in progress, look at source in config/zsh/functions/dotfiles/dotfiles"
       ;;
 
       (*)
-        echo "Bad argument: $1"
-        dotfiles help
+        echo "[dotfiles] bad argument: $1"
       ;;
     esac
     shift

@@ -1,0 +1,26 @@
+#!/bin/zsh
+
+function _dotfiles_init_functions() {
+  # clear init.zsh
+  if [[ -e "$ZSH_HOME/functions/init.zsh" ]]; then
+    truncate -s 0 "$ZSH_HOME/functions/init.zsh"
+  else
+    touch "$ZSH_HOME/functions/init.zsh"
+  fi
+
+  # in init.zsh: add function directories to fpath
+  echo "fpath=($(echo $(find "$ZSH_HOME/functions" -type d)) \"\${fpath[@]}\")" >> "$ZSH_HOME/functions/init.zsh"
+
+  # load function to compile files
+  source $ZSH_HOME/functions/dotfiles/_dotfiles_compile_file
+
+  for function_file in $(find "$ZSH_HOME/functions" -type f ! -name "*.*"); do
+    # in init.zsh: autoload function
+    echo "autoload -Uz $function_file" >> "$ZSH_HOME/functions/init.zsh"
+
+    # compile function
+    _dotfiles_compile_file $function_file
+  done
+
+  _dotfiles_compile_file "$ZSH_HOME/functions/init.zsh"
+}

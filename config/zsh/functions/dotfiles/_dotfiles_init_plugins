@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+function _dotfiles_init_plugins() {
+  # clear init.zsh
+  if [[ -e "$ZSH_HOME/plugins/init.zsh" ]]; then
+    truncate -s 0 "$ZSH_HOME/plugins/init.zsh"
+  else
+    touch "$ZSH_HOME/plugins/init.zsh"
+  fi
+
+  for plugin in $dotfiles_plugins; do
+    # find zsh file for plugin
+    init_candidates=($ZSH_HOME/plugins/$plugin/*{.plugin,}.{zsh-theme,zsh,sh}(N))
+    [[ -n ${init_candidates} ]] || { echo >&2 "[dotfiles] no init file found for $plugin!" && continue }
+
+    # in init.zsh: source plugin
+    echo "source ${init_candidates[1]}" >> "$ZSH_HOME/plugins/init.zsh"
+  done
+
+  # compile plugin files
+  for plugin_file in $ZSH_HOME/plugins/**/*.{sh,zsh,zsh-theme}; do
+    _dotfiles_compile_file $plugin_file
+  done
+}
