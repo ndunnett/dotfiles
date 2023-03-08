@@ -38,12 +38,12 @@ Results from benchmarking with [zsh-bench](https://github.com/romkatv/zsh-bench)
     exit_time_ms=39.214
 
 ### ndunnett/dotfiles
-    first_prompt_lag_ms=25.279
-    first_command_lag_ms=110.371
-    command_lag_ms=14.807
-    input_lag_ms=7.536
-    exit_time_ms=39.757
-
+    first_prompt_lag_ms=20.456
+    first_command_lag_ms=106.819
+    command_lag_ms=5.379
+    input_lag_ms=7.171
+    exit_time_ms=38.615
+    
 ### Oh-My-Zsh (same plugins, loaded by framework)
     first_prompt_lag_ms=292.866
     first_command_lag_ms=302.503
@@ -54,11 +54,11 @@ Results from benchmarking with [zsh-bench](https://github.com/romkatv/zsh-bench)
 ### Comparison relative to vanilla
 |  | Vanilla | ndunnett/dotfiles | Oh-My-Zsh |
 |---|---|---|---|
-| first_prompt_lag_ms | 100% | 190% | 2208% |
-| first_command_lag_ms | 100% | 109% | 299% |
-| command_lag_ms | 100% | 107% | 625% |
-| input_lag_ms | 100% | 100% | 100% |
-| exit_time_ms | 100% | 101% | 256% |
+| first_prompt_lag_ms | 100% | 154% | 2208% |
+| first_command_lag_ms | 100% | 106% | 299% |
+| command_lag_ms | 100% | 39% | 625% |
+| input_lag_ms | 100% | 96% | 100% |
+| exit_time_ms | 100% | 98% | 256% |
 
 # TODO
 - Setup font management
