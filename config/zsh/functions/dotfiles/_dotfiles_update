@@ -3,6 +3,10 @@
 function _dotfiles_update() {
   echo "[dotfiles] checking for updates"
 
+  function repo_up_to_date() {
+    [[ $(git -C $1 rev-parse HEAD) == $(git -C $1 ls-remote -q | grep HEAD | cut -f1) ]] && echo yes || echo no
+  }
+
   for plugin in $dotfiles_plugins; do
     # check plugins
     echo "[dotfiles] checking $plugin..."
@@ -10,7 +14,7 @@ function _dotfiles_update() {
       echo "[dotfiles] plugin directory doesn't exist, cloning repo"
       git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/$plugin.git" "$ZSH_HOME/plugins/$plugin"
       changes_made="yes"
-    elif ! git -C "$ZSH_HOME/plugins/$plugin" diff-index --quiet HEAD; then
+    elif [[ $(repo_up_to_date "$ZSH_HOME/plugins/$plugin") == "no" ]]; then
       echo "[dotfiles] $plugin out of date, pulling repo"
       git -C "$ZSH_HOME/plugins/$plugin" pull -q
       changes_made="yes"
@@ -19,7 +23,7 @@ function _dotfiles_update() {
 
   # check dotfiles repo
   echo "[dotfiles] checking dotfiles repo..."
-  if ! git -C "$DOTFILES_HOME" diff-index --quiet HEAD; then
+  if [[ $(repo_up_to_date "$DOTFILES_HOME") == "no" ]]; then
     echo "[dotfiles] dotfiles out of date, pulling repo"
     git -C $DOTFILES_HOME pull -q
     changes_made="yes"
