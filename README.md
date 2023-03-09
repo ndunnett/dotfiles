@@ -43,7 +43,7 @@ Results from benchmarking with [zsh-bench](https://github.com/romkatv/zsh-bench)
     command_lag_ms=5.379
     input_lag_ms=7.171
     exit_time_ms=38.615
-    
+
 ### Oh-My-Zsh (same plugins, loaded by framework)
     first_prompt_lag_ms=292.866
     first_command_lag_ms=302.503
