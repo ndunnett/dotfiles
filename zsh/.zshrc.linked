@@ -1,0 +1,10 @@
+#!/bin/zsh
+
+# load functions
+[[ -e "$DOTFILES_HOME/zsh/functions/init.zsh" ]] || (source $DOTFILES_HOME/zsh/functions/dotfiles/_dotfiles_init_functions && _dotfiles_init_functions)
+source "$DOTFILES_HOME/zsh/functions/init.zsh"
+
+# source configuration scripts
+for file in $DOTFILES_HOME/zsh/<0-10000>*.*; do
+  source $file
+done

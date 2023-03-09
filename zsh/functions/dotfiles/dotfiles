@@ -4,14 +4,14 @@ function dotfiles() {
   while [ $# -gt 0 ]; do
     case "$1" in
       (benchmark)
-        if [[ ! -d "$ZSH_HOME/plugins/zsh-bench" ]]; then
+        if [[ ! -d "$DOTFILES_HOME/zsh/plugins/zsh-bench" ]]; then
           echo "[dotfiles] zsh-bench not found, cloning repo"
-          git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/romkatv/zsh-bench.git" "$ZSH_HOME/plugins/zsh-bench"
-        elif ! git -C "$ZSH_HOME/plugins/zsh-bench" diff-index --quiet HEAD; then
+          git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/romkatv/zsh-bench.git" "$DOTFILES_HOME/zsh/plugins/zsh-bench"
+        elif ! git -C "$DOTFILES_HOME/zsh/plugins/zsh-bench" diff-index --quiet HEAD; then
           echo "[dotfiles] zsh-bench out of date, pulling repo"
-          git -C "$ZSH_HOME/plugins/zsh-bench" pull -q
+          git -C "$DOTFILES_HOME/zsh/plugins/zsh-bench" pull -q
         fi
-        zsh "$ZSH_HOME/plugins/zsh-bench/zsh-bench"
+        zsh "$DOTFILES_HOME/zsh/plugins/zsh-bench/zsh-bench"
       ;;
 
       (reload)
@@ -21,17 +21,17 @@ function dotfiles() {
 
       (flush)
         echo "[dotfiles] flushing downloaded/generated files"
-        rm -rf $ZSH_HOME/plugins
-        rm -f $ZSH_HOME/functions/init.zsh
-        rm -f $ZSH_HOME/**/*.zwc
+        rm -rf $DOTFILES_HOME/zsh/plugins
+        rm -f $DOTFILES_HOME/zsh/functions/init.zsh
+        rm -f $DOTFILES_HOME/zsh/**/*.zwc
         dotfiles reload
       ;;
 
       (recompile)
         echo "[dotfiles] removing compiled files"
-        rm -f $ZSH_HOME/plugins/init.zsh
-        rm -f $ZSH_HOME/functions/init.zsh
-        rm -f $ZSH_HOME/**/*.zwc
+        rm -f $DOTFILES_HOME/zsh/plugins/init.zsh
+        rm -f $DOTFILES_HOME/zsh/functions/init.zsh
+        rm -f $DOTFILES_HOME/zsh/**/*.zwc
         _dotfiles_init_functions
         _dotfiles_init_plugins
         dotfiles reload
@@ -39,9 +39,9 @@ function dotfiles() {
 
       (load_plugins)
         [[ -v dotfiles_plugins ]] || echo >&2 "[dotfiles] plugins not defined!"
-        [[ -d "$ZSH_HOME/plugins" ]] || dotfiles update
-        [[ -e "$ZSH_HOME/plugins/init.zsh" ]] || _dotfiles_init_plugins
-        source "$ZSH_HOME/plugins/init.zsh"
+        [[ -d "$DOTFILES_HOME/zsh/plugins" ]] || dotfiles update
+        [[ -e "$DOTFILES_HOME/zsh/plugins/init.zsh" ]] || _dotfiles_init_plugins
+        source "$DOTFILES_HOME/zsh/plugins/init.zsh"
       ;;
 
       (update)

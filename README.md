@@ -19,7 +19,7 @@ Functions defined within the `config/zsh/functions` directory will be automatica
 ### Manual
 Run single line script:
 
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ndunnett/dotfiles/master/scripts/bootstrap.sh)" && exec zsh
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ndunnett/dotfiles/master/install.sh)"
 
 ### GitHub codespaces
 On GitHub, navigate to `Settings > Codespaces`, tick `automatically install dotfiles` and populate repository field. Upon building a codespace, run `exec zsh` and restart the container.

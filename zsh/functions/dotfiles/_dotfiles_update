@@ -10,13 +10,13 @@ function _dotfiles_update() {
   for plugin in $dotfiles_plugins; do
     # check plugins
     echo "[dotfiles] checking $plugin..."
-    if [[ ! -d "$ZSH_HOME/plugins/$plugin" ]]; then
+    if [[ ! -d "$DOTFILES_HOME/zsh/plugins/$plugin" ]]; then
       echo "[dotfiles] plugin directory doesn't exist, cloning repo"
-      git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/$plugin.git" "$ZSH_HOME/plugins/$plugin"
+      git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/$plugin.git" "$DOTFILES_HOME/zsh/plugins/$plugin"
       changes_made="yes"
-    elif [[ $(repo_up_to_date "$ZSH_HOME/plugins/$plugin") == "no" ]]; then
+    elif [[ $(repo_up_to_date "$DOTFILES_HOME/zsh/plugins/$plugin") == "no" ]]; then
       echo "[dotfiles] $plugin out of date, pulling repo"
-      git -C "$ZSH_HOME/plugins/$plugin" pull -q
+      git -C "$DOTFILES_HOME/zsh/plugins/$plugin" pull -q
       changes_made="yes"
     fi
   done
