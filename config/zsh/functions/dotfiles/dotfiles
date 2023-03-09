@@ -20,7 +20,7 @@ function dotfiles() {
       ;;
 
       (flush)
-        echo "[dotfiles] flushing dotfiles"
+        echo "[dotfiles] flushing downloaded/generated files"
         rm -rf $ZSH_HOME/plugins
         rm -f $ZSH_HOME/functions/init.zsh
         rm -f $ZSH_HOME/**/*.zwc
