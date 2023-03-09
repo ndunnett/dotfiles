@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# check that zsh is available
+command -v zsh >/dev/null 2>&1 || { echo >&2 "zsh not found!"; exit 1; }
+
+# set default shell to zsh
+zsh_path=$(command -v zsh)
+[[ "$SHELL" == "$zsh_path" ]] || chsh -s "$zsh_path"
+
 # clone dotfiles repo if we aren't in it
 if [[ -d ".git" ]]; then
   DOTFILES_HOME=$( dirname -- "$( readlink -f -- "$0"; )"; )
@@ -8,13 +15,6 @@ else
   git clone --depth 1 https://github.com/ndunnett/dotfiles.git "$DOTFILES_HOME"
   cd "$DOTFILES_HOME"
 fi
-
-# check that zsh is available
-command -v zsh >/dev/null 2>&1 || { echo >&2 "zsh not found!"; exit 1; }
-
-# set default shell to zsh
-zsh_path=$(command -v zsh)
-[[ "$SHELL" == "$zsh_path" ]] || chsh -s "$zsh_path"
 
 # insert DOTFILES_HOME into .zshenv file
 zshenv="$HOME/.zshenv"
