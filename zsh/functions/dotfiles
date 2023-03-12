@@ -19,33 +19,18 @@ function dotfiles() {
         exec zsh -l
       ;;
 
-      (flush)
-        echo "[dotfiles] flushing downloaded/generated files"
-        rm -rf $DOTFILES_HOME/zsh/plugins
-        rm -f $DOTFILES_HOME/zsh/functions/init.zsh
-        rm -f $DOTFILES_HOME/zsh/**/*.zwc
-        dotfiles reload
-      ;;
-
       (recompile)
-        echo "[dotfiles] removing compiled files"
-        rm -f $DOTFILES_HOME/zsh/plugins/init.zsh
-        rm -f $DOTFILES_HOME/zsh/functions/init.zsh
-        rm -f $DOTFILES_HOME/zsh/**/*.zwc
-        _dotfiles_init_functions
-        _dotfiles_init_plugins
-        dotfiles reload
+        zsh "$DOTFILES_HOME/scripts/compile.zsh" && dotfiles reload
       ;;
 
       (load_plugins)
-        [[ -v dotfiles_plugins ]] || echo >&2 "[dotfiles] plugins not defined!"
         [[ -d "$DOTFILES_HOME/zsh/plugins" ]] || dotfiles update
-        [[ -e "$DOTFILES_HOME/zsh/plugins/init.zsh" ]] || _dotfiles_init_plugins
+        [[ -e "$DOTFILES_HOME/zsh/plugins/init.zsh" ]] || dotfiles recompile
         source "$DOTFILES_HOME/zsh/plugins/init.zsh"
       ;;
 
       (update)
-        _dotfiles_update
+        zsh "$DOTFILES_HOME/scripts/update.zsh" && dotfiles recompile
       ;;
 
       (help)

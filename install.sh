@@ -27,5 +27,7 @@ elif [[ $(grep $new_line $zshenv) == "" ]]; then
 fi
 
 # link files, reload shell
+zsh "$DOTFILES_HOME/scripts/update.zsh"
+zsh "$DOTFILES_HOME/scripts/compile.zsh"
 zsh "$DOTFILES_HOME/scripts/link_files.zsh"
 exec zsh -l

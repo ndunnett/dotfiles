@@ -1,7 +1,0 @@
-#!/bin/zsh
-
-function _dotfiles_compile_file() {
-  # delete compiled file if it's older than the source then compile
-  [[ "$1.zwc" -ot $1 ]] && rm -f "$1.zwc"
-  [[ -e "$1.zwc" ]] || zcompile $1
-}
