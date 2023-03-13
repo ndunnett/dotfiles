@@ -7,15 +7,17 @@ command -v zsh >/dev/null 2>&1 || { echo >&2 "zsh not found!"; exit 1; }
 
 # set default shell to zsh
 zsh_path=$(command -v zsh)
-[[ "$SHELL" == "$zsh_path" ]] || chsh -s "$zsh_path"
+[[ "$SHELL" == "$zsh_path" ]] || (chsh -s "$zsh_path" && echo "[dotfiles] changing default shell to zsh..." && changes_made="yes")
 
 # clone dotfiles repo if we aren't in it
 if [[ -d ".git" ]]; then
   DOTFILES_HOME=$( dirname -- "$( readlink -f -- "$0"; )"; )
 else
   DOTFILES_HOME="$HOME/dotfiles"
-  git clone --depth 1 https://github.com/ndunnett/dotfiles.git "$DOTFILES_HOME"
+  echo "[dotfiles] cloning dotfiles repo to $DOTFILES_HOME..."
+  git clone -q --depth 1 --recursive --shallow-submodules https://github.com/ndunnett/dotfiles.git "$DOTFILES_HOME"
   cd "$DOTFILES_HOME"
+  changes_made="yes"
 fi
 
 # insert DOTFILES_HOME into .zshenv file
@@ -36,8 +38,6 @@ done
 if [[ $changes_made ]]; then
   echo "[dotfiles] finished installation, reloading shell"
   exec zsh -l
-  exit 0
 else
   echo "[dotfiles] finished installation, no changes made"
-  exit 1
 fi

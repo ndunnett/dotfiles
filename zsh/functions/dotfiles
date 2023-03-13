@@ -20,7 +20,7 @@ function dotfiles() {
       ;;
 
       (recompile)
-        zsh "$DOTFILES_HOME/zsh/install.zsh" --compile && dotfiles reload
+        zsh "$DOTFILES_HOME/zsh/install.zsh" "--compile"
       ;;
 
       (load_plugins)
@@ -30,7 +30,7 @@ function dotfiles() {
       ;;
 
       (update)
-        zsh "$DOTFILES_HOME/zsh/install.zsh" --update && dotfiles recompile
+        zsh "$DOTFILES_HOME/zsh/install.zsh" "--update"
       ;;
 
       (help)

@@ -25,11 +25,11 @@ function update() {
     # check plugins
     echo "[dotfiles] checking $plugin..."
     if [[ ! -d "$DOTFILES_HOME/zsh/plugins/$plugin" ]]; then
-      echo "[dotfiles] plugin directory doesn't exist, cloning repo"
+      echo "[dotfiles] cloning $plugin repo..."
       git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/$plugin.git" "$DOTFILES_HOME/zsh/plugins/$plugin"
       update_changes_made="yes"
     elif repo_up_to_date "$DOTFILES_HOME/zsh/plugins/$plugin"; then
-      echo "[dotfiles] $plugin out of date, pulling repo"
+      echo "[dotfiles] pulling $plugin repo..."
       git -C "$DOTFILES_HOME/zsh/plugins/$plugin" pull -q
       update_changes_made="yes"
     fi
@@ -38,7 +38,7 @@ function update() {
   # check dotfiles repo
   echo "[dotfiles] checking dotfiles repo..."
   if repo_up_to_date "$DOTFILES_HOME"; then
-    echo "[dotfiles] dotfiles out of date, pulling repo"
+    echo "[dotfiles] pulling dotfiles repo..."
     git -C "$DOTFILES_HOME" pull -q
     update_changes_made="yes"
   fi
@@ -129,15 +129,15 @@ if [ $# -gt 0 ]; then
   while [ $# -gt 0 ]; do
     case "$1" in
       (--update)
-        update && exit 0 || exit 1
+        update
       ;;
 
       (--compile)
-        compile_all && exit 0 || exit 1
+        compile_all
       ;;
 
       (*)
-        echo "[dotfiles] bad argument: $1"
+        echo "[dotfiles] bad argument: $1" && exit 1
       ;;
     esac
     shift
