@@ -41,3 +41,5 @@ if [[ $changes_made ]]; then
 else
   echo "[dotfiles] finished installation, no changes made"
 fi
+
+exit 0
