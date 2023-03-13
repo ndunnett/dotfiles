@@ -7,16 +7,16 @@ command -v zsh >/dev/null 2>&1 || { echo >&2 "zsh not found!"; exit 1; }
 
 # set default shell to zsh
 zsh_path=$(command -v zsh)
-[[ "$SHELL" == "$zsh_path" ]] || (chsh -s "$zsh_path" && echo "[dotfiles] changing default shell to zsh..." && changes_made="yes")
+[ "$SHELL" = "$zsh_path" ] || (chsh -s "$zsh_path" && echo "[dotfiles] changing default shell to zsh..." && changes_made="yes")
 
 # clone dotfiles repo if we aren't in it
-if [[ -d ".git" ]]; then
+if [ -d ".git" ]; then
   DOTFILES_HOME=$(dirname -- "$(readlink -f -- "$0")")
 else
   DOTFILES_HOME="$HOME/dotfiles"
   echo "[dotfiles] cloning dotfiles repo to $DOTFILES_HOME..."
   git clone -q --depth 1 --recursive --shallow-submodules https://github.com/ndunnett/dotfiles.git "$DOTFILES_HOME"
-  cd "$DOTFILES_HOME"
+  cd "$DOTFILES_HOME" || (echo "[dotfiles] failed to cd into $DOTFILES_HOME" && exit 1)
   changes_made="yes"
 fi
 
@@ -27,15 +27,15 @@ zsh "$DOTFILES_HOME/scripts/insert_env.zsh" "DOTFILES_HOME" "$DOTFILES_HOME" && 
 zsh "$DOTFILES_HOME/scripts/link_files.zsh" && changes_made="yes"
 
 # run install.zsh for each topic
-for topic_dir in $(find "$DOTFILES_HOME" -maxdepth 1 -mindepth 1 -type d); do
-  if [[ -e "$topic_dir/install.zsh" ]]; then
-    echo "[dotfiles] installing topic $(echo $topic_dir | sed "s|$DOTFILES_HOME/||g")..."
+for topic_dir in "$DOTFILES_HOME"/*; do
+  if [ -d "$topic_dir" ] && [ -e "$topic_dir/install.zsh" ]; then
+    echo "[dotfiles] installing topic $(echo "$topic_dir" | sed "s|$DOTFILES_HOME/||g")..."
     zsh "$topic_dir/install.zsh" && changes_made="yes"
   fi
 done
 
 # check for changes
-if [[ $changes_made ]]; then
+if [ "$changes_made" ]; then
   echo "[dotfiles] finished installation, reloading shell"
   exec zsh -l
 else
