@@ -11,7 +11,7 @@ zsh_path=$(command -v zsh)
 
 # clone dotfiles repo if we aren't in it
 if [[ -d ".git" ]]; then
-  DOTFILES_HOME=$( dirname -- "$( readlink -f -- "$0"; )"; )
+  DOTFILES_HOME=$(dirname -- "$(readlink -f -- "$0")")
 else
   DOTFILES_HOME="$HOME/dotfiles"
   echo "[dotfiles] cloning dotfiles repo to $DOTFILES_HOME..."
