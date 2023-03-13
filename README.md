@@ -1,23 +1,42 @@
 # ndunnett/dotfiles
-Designed to use across any unix system compatible with zsh, only actually tested on macOS and Ubuntu. There is no framework, plugins are managed by <100 lines of shell script. There are two types of files: config (static location) and linked (symbolically linked). I have minimised the amount of linked files, and point back to the config files as much as possible.
+Designed to maintain and use a common set of files across any unix derived system, only actually tested on macOS and Ubuntu. There is no framework, everything is managed by shell scripts. Files are organised by topic, with the `zsh` topic being the engine so to speak.
 
-Running `install.sh` dynamically manages symbolic links using `ln` based on the contents of `linked` (it will map the file structure to your `$HOME` directory) and writes the required environment variables to `.zshenv`. Existing files that conflict with linked files will be renamed to have `.old` as a suffix.
+### How it works
+Running `install.sh` primarily does two things:
 
-Functions defined within the `config/zsh/functions` directory will be automatically compiled and autoloaded at the start of `~/.zshrc`. All files prefixed with a number within `config/zsh` (ie. `01_config.zsh`) will be sourced in order, these files are where all custom configuration should be defined. An array of GitHub repositories with format `<author>/<name>` should be exported as `dotfiles_plugins` before calling `dotfiles load_plugins` to automatically manage plugin loading.
+1. Dynamically manages symbolic links using `ln`. Any files within any topic directory suffixed with `.linked` will be symbolically linked from `$HOME` in the same file structure, ie. `topic/foo/bar.zsh.linked` will have a symbolic link from `$HOME/foo/bar.zsh`. Existing files that conflict with linked files will be renamed to have `.old` as a suffix, ie. `$HOME/foo/bar.zsh.old`.
 
-### Shell plugins
+2. Runs the topic installation scripts. Any script named `install.zsh` within the base directory of each topic will be run during installation. These scripts are where you should install applications, write environment variables, etc. All files prefixed with a number within each topic directory (ie. `topic/01_config.zsh`) will be sourced in alphabetical order within `$HOME/.zshrc`. This is where you should implement custom configuration that needs to be loaded with each shell instance.
+
+### Idempotence
+At every step of the way, before making any change it will first be checked if the change needs to be made, so it is safe to repeatedly run the installation process as well as updating and recompiling.
+
+# Topic: `zsh`
+### How it works
+When `zsh/install.zsh` is executed, the list of plugins (defined within `zsh/plugin_repos.zsh` as an array of GitHub repositories with format `<author>/<name>`) will be cloned into the `zsh/plugins` directory. All `*.zsh` files are then compiled, and `zsh/plugins/init.zsh` will be generated sourcing each plugin. All functions within `zsh/functions` will also be compiled, and `zsh/functions/init.zsh` will be generated which will add each directory within `zsh/functions` to `fpath` and autoload each function.
+
+In `$HOME/.zshrc` (which is symbolically linked to `zsh/.zshrc.linked`), `zsh/functions/init.zsh` is sourced, then every `*.zsh` file that is prefixed with a number within any topic directory will be sourced in alphabetical order. Within `zsh/03_plugins.zsh`, the function `dotfiles load_plugins` is called which sources `zsh/plugins/init.zsh`. This way, you can control what is loaded before and after plugins are loaded.
+
+### Updating or making changes
+Running `dotfiles update` will pull all plugin repositories as well as the main dotfiles repository. It may be necessary to recompile by running `dotfiles recompile` which will recompile any files that have changed since they were last compiled. After updating or compiling, you can reload shell by running `dotfiles reload` to see the effect of any changes.
+
+### Benchmarking
+Running `dotfiles benchmark` will download the latest version of [zsh-bench](https://github.com/romkatv/zsh-bench) to the plugins folder and run it.
+
+### Default plugins
 - [romkatv/powerlevel10k](https://github.com/romkatv/powerlevel10k): nice theme with good performance
 - [zimfw/completion](https://github.com/zimfw/completion): enables tab completion
 - [zimfw/ssh](https://github.com/zimfw/ssh): for ssh-agent convenience
 - [zdharma/fast-syntax-highlighting](https://github.com/zdharma/fast-syntax-highlighting): highly performant syntax highlighting
 - [zsh-users/zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions): fish-like autosuggestions
 
-### `dotfiles` command
-- Work in progress, see [config/zsh/functions/dotfiles/dotfiles](https://github.com/ndunnett/dotfiles/blob/master/config/zsh/functions/dotfiles/dotfiles)
+# Topic: `macos`
+In this topic, it will check whether or not [Homebrew](https://brew.sh/) is installed, and if not, run the installer in non-interactive mode. It will also call `/opt/homebrew/bin/brew shellenv` and write the results to `$HOME/.zshenv` to statically define the required paths so that it isn't called on every shell load as the installer recommends.
+
+The install script will only run if it is being run within a macOS environment, so you could add all kinds of macOS specific system configuration here without affecting Linux environments which run the same installer.
 
 # Install
-### Manual
-Run single line script:
+### Single line install
 
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ndunnett/dotfiles/master/install.sh)"
 
@@ -64,7 +83,7 @@ Results from benchmarking with [zsh-bench](https://github.com/romkatv/zsh-bench)
 - Setup font management
 - Setup SSH teleportation
 - Setup automatic updates
-- Make script idempotent
+- Enable automating installation with Ansible or similar
 - Refine list of plugins to use
 - Populate config with more improvements
 - Test and patch compatibility with wider range of distributions
