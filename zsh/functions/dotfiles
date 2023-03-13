@@ -34,8 +34,8 @@ function dotfiles() {
       ;;
 
       (help)
-        echo "[dotfiles] valid usage: dotfiles [ reload | load_plugins | update | flush | recompile | benchmark ]"
-        echo "[dotfiles] work in progress, look at source in config/zsh/functions/dotfiles/dotfiles"
+        echo "[dotfiles] valid usage: dotfiles [ reload | load_plugins | update | recompile | benchmark | help ]"
+        echo "[dotfiles] work in progress, look at source in zsh/functions/dotfiles"
       ;;
 
       (*)
