@@ -4,6 +4,6 @@
 source "$DOTFILES_HOME/zsh/functions/init.zsh"
 
 # source configuration scripts
-for file in $DOTFILES_HOME/zsh/<0-10000>*.*; do
+for file in $DOTFILES_HOME/*/<0-10000>*.*; do
   source $file
 done
