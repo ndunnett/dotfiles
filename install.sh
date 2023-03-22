@@ -32,8 +32,7 @@ done
 
 # check for changes
 if [ "$changes_made" ]; then
-  echo "[dotfiles] finished installation, reloading shell"
-  exec zsh -l
+  echo "[dotfiles] finished installation, reload shell"
 else
   echo "[dotfiles] finished installation, no changes made"
 fi
