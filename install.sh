@@ -5,10 +5,6 @@ echo "[dotfiles] start installation"
 # check that zsh is available
 command -v zsh >/dev/null 2>&1 || { echo >&2 "zsh not found!"; exit 1; }
 
-# set default shell to zsh
-zsh_path=$(command -v zsh)
-[ "$SHELL" = "$zsh_path" ] || (chsh -s "$zsh_path" && echo "[dotfiles] changing default shell to zsh..." && changes_made="yes")
-
 # clone dotfiles repo if we aren't in it
 if [ -d ".git" ]; then
   DOTFILES_HOME=$(dirname -- "$(readlink -f -- "$0")")
