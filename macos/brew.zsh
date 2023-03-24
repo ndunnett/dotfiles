@@ -11,15 +11,11 @@ if [[ ! -e "/opt/homebrew/bin/brew" ]]; then
   changes_made="yes"
 fi
 
-# add brew paths to .zshenv
-echo "[dotfiles] checking Homebrew paths are in .zshenv..."
+# add brew paths to init file
+echo "[dotfiles] adding Homebrew to path..."
 brew_paths="$(/opt/homebrew/bin/brew shellenv)"
-brew_paths_array=(${(@s:;:)${brew_paths:gs/export //}})
-for brew_path in $brew_paths_array; do
-  key=$(echo $brew_path | cut -f1 -d "=" | xargs)
-  value=$(echo $brew_path | cut -f2 -d "=" | xargs)
-  zsh "$DOTFILES_HOME/scripts/insert_env.zsh" "$key" "$value" && changes_made="yes"
-done
+echo "$brew_paths" >> "$DOTFILES_HOME/macos/init.zsh.temp"
+eval "$brew_paths"
 
 # install bundle from Brewfile
 echo "[dotfiles] installing Homebrew bundle..."
@@ -27,7 +23,7 @@ brew bundle install --file="$DOTFILES_HOME/macos/Brewfile"
 
 # add brew zsh to acceptable shells
 echo "[dotfiles] adding Homebrew zsh to acceptable shells..."
-brew_zsh="/opt/homebrew/bin/zsh"
+brew_zsh="$HOMEBREW_PREFIX/bin/zsh"
 if [[ ! $(cat /etc/shells | grep "$brew_zsh") ]]; then
   echo "$brew_zsh" | sudo tee -a /etc/shells
   changes_made="yes"

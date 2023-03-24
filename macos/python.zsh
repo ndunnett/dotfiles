@@ -3,6 +3,7 @@
 echo "[dotfiles] checking python installation"
 
 # install brewed python
+eval "$(/opt/homebrew/bin/brew shellenv)"
 python_path="$HOMEBREW_PREFIX/bin/python3"
 [[ -e "$python_path" ]] || (brew install python && changes_made="yes")
 
