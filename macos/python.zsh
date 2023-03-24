@@ -12,7 +12,9 @@ $python_path -m pip install --upgrade pip
 
 # install packages
 echo "[dotfiles] installing pip packages..."
-$python_path -m pip install -r "$DOTFILES_HOME/macos/pip/requirements.txt"
+for requirements in $DOTFILES_HOME/**/pip/requirements.txt; do
+  $python_path -m pip install -r "$requirements"
+done
 
 # in init.zsh: set python aliases
 echo "[dotfiles] setting aliases..."
