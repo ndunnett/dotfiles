@@ -28,7 +28,7 @@ brew bundle install --file="$DOTFILES_HOME/macos/Brewfile"
 # add brew zsh to acceptable shells
 echo "[dotfiles] adding Homebrew zsh to acceptable shells..."
 brew_zsh="/opt/homebrew/bin/zsh"
-if [[ ! $(cat /etc/shells | grep -q "$brew_zsh") ]]; then
+if [[ ! $(cat /etc/shells | grep "$brew_zsh") ]]; then
   echo "$brew_zsh" | sudo tee -a /etc/shells
   changes_made="yes"
 fi
