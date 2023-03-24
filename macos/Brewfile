@@ -1,0 +1,8 @@
+tap "homebrew/cask"
+tap "buo/cask-upgrade"
+tap "homebrew/bundle"
+tap "microsoft/git"
+brew "mas"
+brew "python@3.11"
+brew "git"
+cask "git-credential-manager-core"
