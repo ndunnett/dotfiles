@@ -115,7 +115,7 @@ if [ $# -gt 0 ]; then
   done
 else
   # run update and recompile if no args
-  # update && changes_made="yes"
+  update && changes_made="yes"
   compile_all && changes_made="yes"
   [[ -v changes_made ]] && exit 0 || exit 1
 fi
