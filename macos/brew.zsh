@@ -25,5 +25,20 @@ done
 echo "[dotfiles] installing Homebrew bundle..."
 brew bundle install --file="$DOTFILES_HOME/macos/Brewfile"
 
+# add brew zsh to acceptable shells
+echo "[dotfiles] adding Homebrew zsh to acceptable shells..."
+brew_zsh="/opt/homebrew/bin/zsh"
+if [[ ! $(cat /etc/shells | grep -q "$brew_zsh") ]]; then
+  echo "$brew_zsh" | sudo tee -a /etc/shells
+  changes_made="yes"
+fi
+
+# set shell to brew zsh
+echo "[dotfiles] setting shell to Homebrew zsh..."
+if [[ "$SHELL" != "$brew_zsh" ]]; then
+  chsh -s $brew_zsh
+  changes_made="yes"
+fi
+
 # check for changes and exit
 [[ -v changes_made ]] && exit 0 || exit 1
