@@ -18,8 +18,10 @@ echo "$brew_paths" >> "$DOTFILES_HOME/macos/init.zsh.temp"
 eval "$brew_paths"
 
 # install bundle from Brewfile
-echo "[dotfiles] installing Homebrew bundle..."
-brew bundle install --file="$DOTFILES_HOME/macos/Brewfile"
+echo "[dotfiles] installing Homebrew bundles..."
+for brewfile in $DOTFILES_HOME/**/brew/Brewfile; do
+  brew bundle install --file="$brewfile"
+done
 
 # add brew zsh to acceptable shells
 echo "[dotfiles] adding Homebrew zsh to acceptable shells..."
