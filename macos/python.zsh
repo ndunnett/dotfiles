@@ -6,9 +6,6 @@ echo "[dotfiles] checking python installation"
 python_path="$HOMEBREW_PREFIX/bin/python3"
 [[ -e "$python_path" ]] || (brew install python && changes_made="yes")
 
-# set python aliases
-echo "[dotfiles] setting aliases for python and pip..."
-
 # update pip
 echo "[dotfiles] updating pip..."
 $python_path -m pip install --upgrade pip
