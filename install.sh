@@ -22,9 +22,15 @@ zsh "$DOTFILES_HOME/scripts/insert_env.zsh" "DOTFILES_HOME" "$DOTFILES_HOME" && 
 # symlink all files ending in .linked
 zsh "$DOTFILES_HOME/scripts/link_files.zsh" && changes_made="yes"
 
-# run install.zsh for each topic
+# run install.zsh for zsh
+if [ -d "$DOTFILES_HOME/zsh" ] && [ -e "$DOTFILES_HOME/zsh/install.zsh" ]; then
+  echo "[dotfiles] installing zsh..."
+  zsh "$DOTFILES_HOME/zsh/install.zsh" && changes_made="yes"
+fi
+
+# run install.zsh for remaining topics
 for topic_dir in "$DOTFILES_HOME"/*; do
-  if [ -d "$topic_dir" ] && [ -e "$topic_dir/install.zsh" ]; then
+  if [ "$topic_dir" != "$DOTFILES_HOME/zsh" ] && [ -d "$topic_dir" ] && [ -e "$topic_dir/install.zsh" ]; then
     echo "[dotfiles] installing topic $(echo "$topic_dir" | sed "s|$DOTFILES_HOME/||g")..."
     zsh "$topic_dir/install.zsh" && changes_made="yes"
   fi

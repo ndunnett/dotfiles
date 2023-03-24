@@ -1,21 +1,6 @@
 #!/bin/zsh
 
-function repo_up_to_date() {
-  # checking that latest local commit matches latest remote commit
-  [[ $(git -C $1 rev-parse HEAD) == $(git -C $1 ls-remote -q | grep HEAD | cut -f1) ]] && return 1 || return 0
-}
-
-function compile_file() {
-  # delete compiled file if it's older than the source then compile
-  [[ "$1.zwc" -ot $1 ]] && rm -f "$1.zwc"
-  [[ -e "$1.zwc" ]] && return 1 || (zcompile "$1" && return 0)
-}
-
-function files_differ() {
-  # if files both exist, compare contents
-  [[ ! -e "$1" || ! -e "$2" ]] && return 0
-  cmp -s "$1" "$2" && return 1 || return 0
-}
+source "$DOTFILES_HOME/scripts/helper_functions.zsh"
 
 function update() {
   echo "[dotfiles] start checking for updates"
@@ -56,32 +41,25 @@ function update() {
 function compile_all() {
   echo "[dotfiles] start compiling functions and plugins"
 
-  # make functions init.zsh
-  func_init_file="$DOTFILES_HOME/zsh/functions/init.zsh"
-  func_init_temp="$DOTFILES_HOME/zsh/functions/init.zsh.temp"
-  touch "$func_init_temp"
+  # make main init.zsh
+  main_init_file="$DOTFILES_HOME/zsh/init.zsh"
+  main_init_temp="$DOTFILES_HOME/zsh/init.zsh.temp"
+  touch "$main_init_temp"
 
   # in init.zsh: add function directories to fpath
-  echo "fpath=($(echo $(find "$DOTFILES_HOME/zsh/functions" -type d)) \"\${fpath[@]}\")" >> "$func_init_temp"
+  echo "fpath=($(echo $(find "$DOTFILES_HOME/zsh/functions" -type d)) \"\${fpath[@]}\")" >> "$main_init_temp"
 
   for function_file in $(find "$DOTFILES_HOME/zsh/functions" -type f ! -name "*.*"); do
     # in init.zsh: autoload function
-    echo "autoload -Uz $function_file" >> "$func_init_temp"
+    echo "autoload -Uz $function_file" >> "$main_init_temp"
 
     # compile function
     echo "[dotfiles] compiling $(echo $function_file | sed "s|$DOTFILES_HOME/zsh/functions/||g")..."
     compile_file "$function_file" && compile_changes_made="yes"
   done
 
-  # compare and compile functions init.zsh
-  if files_differ "$func_init_file" "$func_init_temp"; then
-    rm -f "$func_init_file" && mv "$func_init_temp" "$func_init_file"
-    compile_file "$func_init_file"
-    compile_changes_made="yes"
-  else
-    rm -f "$func_init_temp"
-    compile_file "$func_init_file" && compile_changes_made="yes"
-  fi
+  # compare and compile main init.zsh
+  compare_replace_compile "$main_init_file" "$main_init_temp" && compile_changes_made="yes"
 
   # make plugins init.zsh
   plugin_init_file="$DOTFILES_HOME/zsh/plugins/init.zsh"
@@ -105,14 +83,7 @@ function compile_all() {
   done
 
   # compare and compile plugins init.zsh
-  if files_differ "$plugin_init_file" "$plugin_init_temp"; then
-    rm -f "$plugin_init_file" && mv "$plugin_init_temp" "$plugin_init_file"
-    compile_file "$plugin_init_file"
-    compile_changes_made="yes"
-  else
-    rm -f "$plugin_init_temp"
-    compile_file "$plugin_init_file" && compile_changes_made="yes"
-  fi
+  compare_replace_compile "$plugin_init_file" "$plugin_init_temp" && compile_changes_made="yes"
 
   # check for changes
   if [[ -v compile_changes_made ]]; then
@@ -144,7 +115,7 @@ if [ $# -gt 0 ]; then
   done
 else
   # run update and recompile if no args
-  update && changes_made="yes"
+  # update && changes_made="yes"
   compile_all && changes_made="yes"
   [[ -v changes_made ]] && exit 0 || exit 1
 fi
