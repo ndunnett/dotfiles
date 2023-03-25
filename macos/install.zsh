@@ -3,7 +3,7 @@
 source "$DOTFILES_HOME/scripts/helper_functions.zsh"
 
 # skip if not on macOS
-[[ $(uname) != "Darwin" ]] && echo "[dotfiles] not on macOS, skipping topic" && exit 1
+[[ "$(uname)" != "Darwin" ]] && echo "[dotfiles] not on macOS, skipping topic" && exit 1
 
 # make init.zsh
 init_file="$DOTFILES_HOME/macos/init.zsh"
