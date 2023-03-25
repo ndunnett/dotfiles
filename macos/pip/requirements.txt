@@ -1,1 +1,5 @@
-numpy>=1.24.2
+# for ansible:
+ansible>=7.3.0
+passlib>=1.7.4
+keyring>=23.13.1
+argon2_cffi>=21.3.0
