@@ -1,0 +1,10 @@
+{
+    "dockerComposeFile": "./docker-compose.yml",
+    "service": "dotfiles",
+    "workspaceFolder": "/home/dev",
+    "customizations": {
+      "vscode": {
+        "extensions": []
+      }
+    }
+  }
