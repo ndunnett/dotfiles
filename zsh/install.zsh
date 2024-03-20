@@ -18,6 +18,9 @@ function update() {
       git -C "$DOTFILES_HOME/zsh/plugins/$plugin" pull -q
       update_changes_made="yes"
     fi
+
+    # handle case for powerlevel10k to preinstall gitstatusd
+    [[ "$plugin" == "romkatv/powerlevel10k" ]] && . "$DOTFILES_HOME/zsh/plugins/$plugin/gitstatus/install" && update_changes_made="yes"
   done
 
   # check dotfiles repo
@@ -69,7 +72,7 @@ function compile_all() {
   source "$DOTFILES_HOME/zsh/plugin_repos.zsh"
   for plugin in $plugin_repos; do
     # find zsh file for plugin
-    init_candidates=($DOTFILES_HOME/zsh/plugins/$plugin/*{.plugin,}.{zsh-theme,zsh,sh}(N))
+    init_candidates=($DOTFILES_HOME/zsh/plugins/$plugin/*{.plugin,}.(zsh-theme|zsh|sh)(N))
     [[ -n ${init_candidates} ]] || { echo >&2 "[dotfiles] no init file found for $plugin!" && continue }
 
     # in init.zsh: source plugin
@@ -77,8 +80,8 @@ function compile_all() {
 
     # compile plugin files
     echo "[dotfiles] compiling $plugin..."
-    for plugin_file in $DOTFILES_HOME/zsh/plugins/**/*.{sh,zsh,zsh-theme}; do
-      compile_file "$plugin_file" && compile_changes_made="yes"
+    for plugin_file in $DOTFILES_HOME/zsh/plugins/$plugin/**/*.(zsh|zsh-theme)(N); do
+      [[ -f "$plugin_file" ]] && compile_file "$plugin_file" && compile_changes_made="yes"
     done
   done
 
