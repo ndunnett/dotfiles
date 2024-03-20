@@ -1,0 +1,97 @@
+#!/bin/zsh
+
+private_ip_method=none
+public_ip_method=none
+
+function echo_private_ip() {
+  while true; do
+    case "$private_ip_method" in
+      (none)
+        [ -x "$(command -v hostname)" ] && private_ip_method=hostname && continue
+        [ -x "$(command -v nmcli)" ] && private_ip_method=nmcli && continue
+        [ -x "$(command -v ip)" ] && private_ip_method=ip && continue
+        private_ip="unable to determine"
+        break
+      ;;
+
+      (hostname)
+        private_ip="$(hostname -I | cut -d " " -f 1)"
+        break
+      ;;
+
+      (nmcli)
+        private_ip="$(nmcli -p device show | grep -m 1 "IP4.ADDRESS" | awk '{sub(/\/.*/, "", $2); print $2}')"
+        break
+      ;;
+
+      (ip)
+        private_ip="$(ip -4 -o a | grep -m 1 "inet .*\/24" | cut -d " " -f 7 | cut -d "/" -f 1)"
+        break
+      ;;
+    esac
+  done
+
+  echo "Private IP: $private_ip"
+}
+
+function echo_public_ip() {
+  while true; do
+    case "$public_ip_method" in
+      (none)
+        [ -x "$(command -v dig)" ] && public_ip_method=dig && continue
+        [ -x "$(command -v nslookup)" ] && public_ip_method=nslookup && continue
+        [ -x "$(command -v host)" ] && public_ip_method=host && continue
+        [ -x "$(command -v wget)" ] && public_ip_method=wget && continue
+        [ -x "$(command -v curl)" ] && public_ip_method=curl && continue
+        public_ip="unable to determine"
+        break
+      ;;
+
+      (dig)
+        public_ip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+        break
+      ;;
+
+      (nslookup)
+        public_ip="$(nslookup myip.opendns.com resolver1.opendns.com | awk '/^Address: / { print $2 }')"
+        break
+      ;;
+
+      (host)
+        public_ip="$(host myip.opendns.com resolver1.opendns.com | grep "has address" | cut -d " " -f 4)"
+        break
+      ;;
+
+      (wget)
+        public_ip="$(wget -O - -q https://checkip.amazonaws.com)"
+        break
+      ;;
+
+      (curl)
+        public_ip="$(curl -s https://checkip.amazonaws.com)"
+        break
+      ;;
+    esac
+  done
+
+  echo "Public IP: $public_ip"
+}
+
+function myip() {
+  case "$1" in
+    (--private)
+      echo_private_ip
+    ;;
+
+    (--public)
+      echo_public_ip
+    ;;
+
+    (*)
+      echo_private_ip
+      echo_public_ip
+    ;;
+  esac
+}
+
+myip $1

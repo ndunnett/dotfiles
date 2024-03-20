@@ -14,9 +14,8 @@ alias grep="grep --color=auto"
 alias fgrep="fgrep --color=auto"
 alias egrep="egrep --color=auto"
 
-# Get IP addresses
-alias ip_public="dig +short myip.opendns.com @resolver1.opendns.com"
-alias ip_private="ipconfig getifaddr en0"
-
 # Print each PATH entry on a separate line
 alias path="echo ${PATH} | sed \"s|:|\\n|g\""
+
+# Print list of largest files and directories within pwd
+alias ducks="while read -r line; do du -sh \"\$line\"; done < <(ls -1A) | sort -rh | head"
