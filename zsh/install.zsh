@@ -4,10 +4,17 @@ source "$DOTFILES_HOME/scripts/helper_functions.zsh"
 
 function update() {
   echo "[dotfiles] start checking for updates"
-  source "$DOTFILES_HOME/zsh/plugin_repos.zsh"
+  # check dotfiles repo
+  echo "[dotfiles] checking dotfiles repo..."
+  if repo_up_to_date "$DOTFILES_HOME"; then
+    echo "[dotfiles] pulling dotfiles repo..."
+    git -C "$DOTFILES_HOME" pull -q
+    update_changes_made="yes"
+  fi
 
+  # check plugins
+  source "$DOTFILES_HOME/zsh/plugin_repos.zsh"
   for plugin in $plugin_repos; do
-    # check plugins
     echo "[dotfiles] checking $plugin..."
     if [[ ! -d "$DOTFILES_HOME/zsh/plugins/$plugin" ]]; then
       echo "[dotfiles] cloning $plugin repo..."
@@ -20,16 +27,10 @@ function update() {
     fi
 
     # handle case for powerlevel10k to preinstall gitstatusd
-    [[ "$plugin" == "romkatv/powerlevel10k" ]] && . "$DOTFILES_HOME/zsh/plugins/$plugin/gitstatus/install" && update_changes_made="yes"
+    if [[ "$plugin" == "romkatv/powerlevel10k" && ! -e "$HOME/.cache/gitstatus" ]]; then
+      . "$DOTFILES_HOME/zsh/plugins/$plugin/gitstatus/install" && update_changes_made="yes"
+    fi
   done
-
-  # check dotfiles repo
-  echo "[dotfiles] checking dotfiles repo..."
-  if repo_up_to_date "$DOTFILES_HOME"; then
-    echo "[dotfiles] pulling dotfiles repo..."
-    git -C "$DOTFILES_HOME" pull -q
-    update_changes_made="yes"
-  fi
 
   # check for changes
   if [[ -v update_changes_made ]]; then
