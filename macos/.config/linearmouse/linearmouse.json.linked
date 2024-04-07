@@ -1,0 +1,90 @@
+{
+  "$schema": "https:\/\/schema.linearmouse.app\/0.9.5",
+  "schemes": [
+    {
+      "pointer": {
+        "disableAcceleration": true
+      },
+      "if": {
+        "device": {
+          "vendorID": "0x36a7",
+          "serialNumber": "000000000000",
+          "category": "mouse",
+          "productName": "USB  Gaming Mouse",
+          "productID": "0xa888"
+        }
+      },
+      "scrolling": {
+        "speed": {
+          "vertical": 0
+        },
+        "reverse": {
+          "vertical": true
+        },
+        "distance": {
+          "vertical": "auto"
+        },
+        "acceleration": {
+          "vertical": 1
+        }
+      },
+      "buttons": {
+        "mappings": [],
+        "universalBackForward": true
+      }
+    },
+    {
+      "if": {
+        "app": "com.nvidia.gfnpc.mall",
+        "device": {
+          "category": "mouse",
+          "serialNumber": "000000000000",
+          "productName": "USB  Gaming Mouse",
+          "vendorID": "0x36a7",
+          "productID": "0xa888"
+        }
+      },
+      "pointer": {
+        "acceleration": 0.6875,
+        "speed": 0.0689655172413792768,
+        "disableAcceleration": true
+      }
+    },
+    {
+      "if": {
+        "device": {
+          "productID": "0x281",
+          "productName": "Apple Internal Keyboard \/ Trackpad",
+          "category": "trackpad",
+          "vendorID": "0x5ac"
+        }
+      },
+      "pointer": {
+        "acceleration": 1.1,
+        "speed": 0.1
+      },
+      "scrolling": {
+        "speed": {
+          "vertical": 2
+        },
+        "acceleration": {
+          "vertical": 0.4
+        }
+      }
+    },
+    {
+      "pointer": {
+        "disableAcceleration": true
+      },
+      "if": {
+        "app": "com.nvidia.gfnpc.mall",
+        "device": {
+          "productID": "0x281",
+          "vendorID": "0x5ac",
+          "productName": "Apple Internal Keyboard \/ Trackpad",
+          "category": "trackpad"
+        }
+      }
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 # for ansible:
-ansible>=7.3.0
+ansible>=9.4.0
 passlib>=1.7.4
-keyring>=23.13.1
-argon2_cffi>=21.3.0
+keyring>=25.1.0
+argon2_cffi>=23.1.0

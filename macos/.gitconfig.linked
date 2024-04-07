@@ -1,0 +1,6 @@
+[user]
+  name = ndunnett
+  email = nathandunnett@me.com
+
+[credential]
+  helper = /usr/local/share/gcm-core/git-credential-manager
