@@ -49,5 +49,9 @@ if [[ "$SHELL" != "$brew_zsh" ]]; then
   changes_made="yes"
 fi
 
+# start yabai/skhd
+yabai --start-service
+skhd --start-service
+
 # check for changes and exit
 [[ -v changes_made ]] && exit 0 || exit 1

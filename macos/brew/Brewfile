@@ -3,7 +3,9 @@ mas "WireGuard", id: 1451685025
 
 brew "zsh"
 brew "python"
+brew "ansible"
 brew "ansible-lint"
+brew "keyring"
 brew "git"
 cask "git-credential-manager"
 cask "1password"
@@ -19,8 +21,8 @@ cask "discord"
 cask "spotify"
 
 tap "koekeishiya/formulae"
-brew "yabai"
-brew "skhd"
+brew "koekeishiya/formulae/yabai"
+brew "koekeishiya/formulae/skhd"
 
 tap "homebrew/cask-fonts"
 cask "font-iosevka-term-nerd-font"

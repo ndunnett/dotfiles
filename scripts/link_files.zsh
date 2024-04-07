@@ -35,6 +35,7 @@ if files_differ "$linked_file" "$linked_temp"; then
   while read file_to_link link_target; do
     [[ -L $link_target && $link_target != $(readlink -f $link_target) ]] && rm -f "$link_target" && echo "[dotfiles] removing link from $link_target to $(readlink -f $link_target)"
     [[ -e $link_target ]] && mv "$link_target" "$link_target.old" && echo "[dotfiles] renaming $link_target to $link_target.old"
+    [[ -d "$(dirname "$link_target")" ]] || mkdir "$(dirname "$link_target")"
     ln -sf "$file_to_link" "$link_target" && echo "[dotfiles] creating link from $link_target to $file_to_link"
   done < $linked_file
 

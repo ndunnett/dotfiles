@@ -7,16 +7,6 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 python_path="$HOMEBREW_PREFIX/bin/python3"
 [[ -e "$python_path" ]] || (brew install python && changes_made="yes")
 
-# update pip
-echo "[dotfiles] updating pip..."
-$python_path -m pip install --upgrade pip
-
-# install packages
-echo "[dotfiles] installing pip packages..."
-for requirements in $DOTFILES_HOME/**/pip/requirements.txt; do
-  $python_path -m pip install -r "$requirements"
-done
-
 # in init.zsh: set python aliases
 echo "[dotfiles] setting aliases..."
 echo "[dotfiles] python=\"$python_path\""
