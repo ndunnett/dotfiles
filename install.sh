@@ -26,7 +26,14 @@ zsh "$DOTFILES_HOME/scripts/insert_env.zsh" "skip_global_compinit" "1" && change
 if [ ! -x "$DOTFILES_HOME/bin/oh-my-posh" ]; then
   echo "[dotfiles] installing Oh My Posh..."
   mkdir -p "$DOTFILES_HOME/bin"
-  curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "$DOTFILES_HOME/bin"
+
+  if [ -x "$(command -v curl)" ]; then
+    curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "$DOTFILES_HOME/bin"
+  elif [ -x "$(command -v wget)" ]; then
+    wget -qO - https://ohmyposh.dev/install.sh | bash -s -- -d "$DOTFILES_HOME/bin"
+  else
+    echo "[dotfiles] failed to install, no wget or curl"
+  fi
 fi
 
 # run install.zsh for zsh
