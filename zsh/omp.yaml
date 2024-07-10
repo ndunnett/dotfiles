@@ -20,7 +20,7 @@ blocks:
       - type: git
         style: diamond
         foreground: black
-        background: yellow
+        background: green
         background_templates:
           - "{{ if or (.Working.Changed) (.Staging.Changed) }}yellow{{ end }}"
           - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#FFCC80{{ end }}"
