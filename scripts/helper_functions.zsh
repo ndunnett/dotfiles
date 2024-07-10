@@ -2,7 +2,7 @@
 
 function repo_up_to_date() {
   # checking that latest local commit matches latest remote commit
-  [[ $(git -C $1 rev-parse HEAD) == $(git -C $1 ls-remote -q | grep HEAD | cut -f1) ]] && return 1 || return 0
+  [[ "$(git -C $1 rev-parse HEAD)" == "$(git -C $1 log -1 --pretty=format:"%H" origin/HEAD)" ]] && return 1 || return 0
 }
 
 function compile_file() {

@@ -4,36 +4,47 @@ source "$DOTFILES_HOME/scripts/helper_functions.zsh"
 
 function update() {
   echo "[dotfiles] start checking for updates"
+
+  # clone/fetch all repos
+  echo "[dotfiles] fetching repos..."
+  git -C "$DOTFILES_HOME" fetch -q &
+  source "$DOTFILES_HOME/zsh/plugin_repos.zsh"
+  for plugin in $plugin_repos; do
+    if [[ ! -d "$DOTFILES_HOME/zsh/plugins/$plugin" ]]; then
+      echo "[dotfiles] cloning $plugin repo..."
+      git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/$plugin.git" "$DOTFILES_HOME/zsh/plugins/$plugin" &
+      update_changes_made="yes"
+    else
+      git -C "$DOTFILES_HOME/zsh/plugins/$plugin" fetch -q --depth 1 &
+    fi
+  done
+
+  # symlink all files ending in .linked
+  zsh "$DOTFILES_HOME/scripts/link_files.zsh" "$DOTFILES_HOME/zsh" && changes_made="yes"
+
   # check dotfiles repo
-  echo "[dotfiles] checking dotfiles repo..."
+  wait
   if repo_up_to_date "$DOTFILES_HOME"; then
     echo "[dotfiles] pulling dotfiles repo..."
     git -C "$DOTFILES_HOME" pull -q
     update_changes_made="yes"
   fi
 
-  # symlink all files ending in .linked
-  zsh "$DOTFILES_HOME/scripts/link_files.zsh" "$DOTFILES_HOME/zsh" && changes_made="yes"
-
-  # check plugins
-  source "$DOTFILES_HOME/zsh/plugin_repos.zsh"
+  # update plugins
   for plugin in $plugin_repos; do
-    echo "[dotfiles] checking $plugin..."
-    if [[ ! -d "$DOTFILES_HOME/zsh/plugins/$plugin" ]]; then
-      echo "[dotfiles] cloning $plugin repo..."
-      git clone -q --depth 1 --recursive --shallow-submodules "https://github.com/$plugin.git" "$DOTFILES_HOME/zsh/plugins/$plugin"
-      update_changes_made="yes"
-    elif repo_up_to_date "$DOTFILES_HOME/zsh/plugins/$plugin"; then
+    if repo_up_to_date "$DOTFILES_HOME/zsh/plugins/$plugin"; then
       echo "[dotfiles] pulling $plugin repo..."
-      git -C "$DOTFILES_HOME/zsh/plugins/$plugin" pull -q
+      git -C "$DOTFILES_HOME/zsh/plugins/$plugin" pull -q &
       update_changes_made="yes"
-    fi
-
-    # handle case for powerlevel10k to preinstall gitstatusd
-    if [[ "$plugin" == "romkatv/powerlevel10k" && ! -e "$HOME/.cache/gitstatus" ]]; then
-      . "$DOTFILES_HOME/zsh/plugins/$plugin/gitstatus/install" && update_changes_made="yes"
     fi
   done
+
+  # handle case for powerlevel10k to preinstall gitstatusd
+  wait
+  if [[ ! -e "$HOME/.cache/gitstatus" ]]; then
+    echo "[dotfiles] installing gitstatus..."
+    . "$DOTFILES_HOME/zsh/plugins/romkatv/powerlevel10k/gitstatus/install" && update_changes_made="yes"
+  fi
 
   # check for changes
   if [[ -v update_changes_made ]]; then
