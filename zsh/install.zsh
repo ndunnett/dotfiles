@@ -12,6 +12,9 @@ function update() {
     update_changes_made="yes"
   fi
 
+  # symlink all files ending in .linked
+  zsh "$DOTFILES_HOME/scripts/link_files.zsh" "$DOTFILES_HOME/zsh" && changes_made="yes"
+
   # check plugins
   source "$DOTFILES_HOME/zsh/plugin_repos.zsh"
   for plugin in $plugin_repos; do

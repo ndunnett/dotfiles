@@ -5,6 +5,9 @@ source "$DOTFILES_HOME/scripts/helper_functions.zsh"
 # skip if not on macOS
 [[ "$(uname)" != "Darwin" ]] && echo "[dotfiles] not on macOS, skipping topic" && exit 1
 
+# symlink all files ending in .linked
+zsh "$DOTFILES_HOME/scripts/link_files.zsh" "$DOTFILES_HOME/macos" && changes_made="yes"
+
 # make init.zsh
 init_file="$DOTFILES_HOME/macos/init.zsh"
 init_temp="$DOTFILES_HOME/macos/init.zsh.temp"

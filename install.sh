@@ -19,9 +19,6 @@ fi
 # insert DOTFILES_HOME into .zshenv file
 zsh "$DOTFILES_HOME/scripts/insert_env.zsh" "DOTFILES_HOME" "$DOTFILES_HOME" && changes_made="yes"
 
-# symlink all files ending in .linked
-zsh "$DOTFILES_HOME/scripts/link_files.zsh" && changes_made="yes"
-
 # run install.zsh for zsh
 if [ -d "$DOTFILES_HOME/zsh" ] && [ -e "$DOTFILES_HOME/zsh/install.zsh" ]; then
   echo "[dotfiles] installing zsh..."

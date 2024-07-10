@@ -1,21 +1,18 @@
 #!/bin/zsh
 
-function files_differ() {
-  # if files both exist, compare contents
-  [[ ! -e "$1" || ! -e "$2" ]] && return 0
-  cmp -s "$1" "$2" && return 1 || return 0
-}
+base_path=$1
+source "$DOTFILES_HOME/scripts/helper_functions.zsh"
 
-echo "[dotfiles] start linking files"
+echo "[dotfiles] start linking files in $base_path"
 
 # make .linked.temp file
-linked_file="$DOTFILES_HOME/.linked"
-linked_temp="$DOTFILES_HOME/.linked.temp"
+linked_file="$base_path/.links"
+linked_temp="$base_path/.links.temp"
 touch $linked_temp
 
 # populate .linked.temp with [file_to_link] [link_target]
-for file_to_link in $DOTFILES_HOME/*/**/*.linked(D); do
-  echo "$file_to_link $(echo "$file_to_link" | sed -e "s|$DOTFILES_HOME/[^/]*|$HOME|g" -e "s|.linked||g")" >> $linked_temp
+for file_to_link in $base_path/**/*.linked(D); do
+  echo "$file_to_link $(echo "$file_to_link" | sed -e "s|$base_path|$HOME|g" -e "s|.linked||g")" >> $linked_temp
 done
 
 # compare .linked.temp with existing .linked
@@ -35,7 +32,7 @@ if files_differ "$linked_file" "$linked_temp"; then
   while read file_to_link link_target; do
     [[ -L $link_target && $link_target != $(readlink -f $link_target) ]] && rm -f "$link_target" && echo "[dotfiles] removing link from $link_target to $(readlink -f $link_target)"
     [[ -e $link_target ]] && mv "$link_target" "$link_target.old" && echo "[dotfiles] renaming $link_target to $link_target.old"
-    [[ -d "$(dirname "$link_target")" ]] || mkdir "$(dirname "$link_target")"
+    [[ -d "$(dirname "$link_target")" ]] || mkdir -p "$(dirname "$link_target")"
     ln -sf "$file_to_link" "$link_target" && echo "[dotfiles] creating link from $link_target to $file_to_link"
   done < $linked_file
 

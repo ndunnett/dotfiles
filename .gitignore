@@ -1,5 +1,5 @@
 zsh/plugins
 init.zsh
-.linked
+*.links
 *.zwc
 Brewfile.lock.json
