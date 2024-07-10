@@ -72,8 +72,9 @@ function compile_all() {
     echo "autoload -Uz $function_file" >> "$main_init_temp"
 
     # compile function
-    echo "[dotfiles] compiling $(echo $function_file | sed "s|$DOTFILES_HOME/zsh/functions/||g")..."
-    compile_file "$function_file" && compile_changes_made="yes"
+    compile_file "$function_file" && \
+    echo "[dotfiles] compiled $function_file" && \
+    compile_changes_made="yes"
   done
 
   # compare and compile main init.zsh
@@ -94,9 +95,10 @@ function compile_all() {
     echo "source ${init_candidates[1]}" >> "$plugin_init_temp"
 
     # compile plugin files
-    echo "[dotfiles] compiling $plugin..."
     for plugin_file in $DOTFILES_HOME/zsh/plugins/$plugin/**/*.(zsh|zsh-theme)(N); do
-      [[ -f "$plugin_file" ]] && compile_file "$plugin_file" && compile_changes_made="yes"
+      [[ -f "$plugin_file" ]] && compile_file "$plugin_file" && \
+      echo "[dotfiles] compiled $plugin_file" && \
+      compile_changes_made="yes"
     done
   done
 
