@@ -39,14 +39,8 @@ function update() {
     fi
   done
 
-  # handle case for powerlevel10k to preinstall gitstatusd
-  wait
-  if [[ ! -e "$HOME/.cache/gitstatus" ]]; then
-    echo "[dotfiles] installing gitstatus..."
-    . "$DOTFILES_HOME/zsh/plugins/romkatv/powerlevel10k/gitstatus/install" && update_changes_made="yes"
-  fi
-
   # check for changes
+  wait
   if [[ -v update_changes_made ]]; then
     echo "[dotfiles] finished updating, recompile to apply changes"
     return 0

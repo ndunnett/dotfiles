@@ -19,6 +19,9 @@ fi
 # insert DOTFILES_HOME into .zshenv file
 zsh "$DOTFILES_HOME/scripts/insert_env.zsh" "DOTFILES_HOME" "$DOTFILES_HOME" && changes_made="yes"
 
+# disable global compinit
+zsh "$DOTFILES_HOME/scripts/insert_env.zsh" "skip_global_compinit" "1" && changes_made="yes"
+
 # install Oh My Posh
 if [ ! -x "$DOTFILES_HOME/bin/oh-my-posh" ]; then
   echo "[dotfiles] installing Oh My Posh..."
