@@ -19,6 +19,13 @@ fi
 # insert DOTFILES_HOME into .zshenv file
 zsh "$DOTFILES_HOME/scripts/insert_env.zsh" "DOTFILES_HOME" "$DOTFILES_HOME" && changes_made="yes"
 
+# install Oh My Posh
+if [ ! -x "$DOTFILES_HOME/bin/oh-my-posh" ]; then
+  echo "[dotfiles] installing Oh My Posh..."
+  mkdir -p "$DOTFILES_HOME/bin"
+  curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "$DOTFILES_HOME/bin"
+fi
+
 # run install.zsh for zsh
 if [ -d "$DOTFILES_HOME/zsh" ] && [ -e "$DOTFILES_HOME/zsh/install.zsh" ]; then
   echo "[dotfiles] installing zsh..."
@@ -34,6 +41,7 @@ for topic_dir in "$DOTFILES_HOME"/*; do
 done
 
 # check for changes
+wait
 if [ "$changes_made" ]; then
   echo "[dotfiles] finished installation, reload shell"
 else

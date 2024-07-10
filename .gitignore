@@ -1,4 +1,5 @@
-zsh/plugins
+/bin
+/zsh/plugins
 init.zsh
 *.links
 *.zwc
