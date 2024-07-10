@@ -7,7 +7,8 @@ function echo_private_ip() {
   while true; do
     case "$private_ip_method" in
       (none)
-        [ -x "$(command -v hostname)" ] && private_ip_method=hostname && continue
+        ([ -x "$(command -v hostname)" ] && echo "$(hostname -I 2>&1)" | grep illegal) || (private_ip_method=hostname && continue)
+        [ -x "$(command -v ifconfig)" ] && private_ip_method=ifconfig && continue
         [ -x "$(command -v nmcli)" ] && private_ip_method=nmcli && continue
         [ -x "$(command -v ip)" ] && private_ip_method=ip && continue
         private_ip="unable to determine"
@@ -16,6 +17,11 @@ function echo_private_ip() {
 
       (hostname)
         private_ip="$(hostname -I | cut -d " " -f 1)"
+        break
+      ;;
+
+      (ifconfig)
+        private_ip="$(ifconfig | grep "inet " | grep -Fv 127.0.0.1 -m 1 | awk '{print $2}')"
         break
       ;;
 
