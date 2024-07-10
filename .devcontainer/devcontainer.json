@@ -1,10 +1,16 @@
 {
-    "dockerComposeFile": "./docker-compose.yml",
-    "service": "dotfiles",
-    "workspaceFolder": "/home/dev",
-    "customizations": {
-      "vscode": {
-        "extensions": []
-      }
-    }
+  "name": "dotfiles",
+  "image": "ubuntu:jammy",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/dev/dotfiles,type=bind",
+  "workspaceFolder": "/home/dev/dotfiles",
+  "remoteUser": "dev",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "username": "dev"
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers-contrib/features/wget-apt-get:1": {}
   }
+}
