@@ -11,8 +11,8 @@ linked_temp="$base_path/.links.temp"
 touch $linked_temp
 
 # populate .linked.temp with [file_to_link] [link_target]
-for file_to_link in $base_path/**/*.linked(D); do
-  echo "$file_to_link $(echo "$file_to_link" | sed -e "s|$base_path|$HOME|g" -e "s|.linked||g")" >> $linked_temp
+for file_to_link in $base_path/home/**/*(.D); do
+  echo "$file_to_link $(echo "$file_to_link" | sed -e "s|$base_path/home|$HOME|g")" >> $linked_temp
 done
 
 # compare .linked.temp with existing .linked

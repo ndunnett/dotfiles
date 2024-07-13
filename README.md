@@ -4,7 +4,7 @@
 
 ### Symbolic Linking
 
-Configuration files are linked automatically using `ln`. Files within any topic directory ending in `.linked` will be symbolically linked from `$HOME` in the same file structure. For example, `topic/foo/bar.zsh.linked` will be symbolically linked at `$HOME/foo/bar.zsh`. If there are existing files that conflict with the linked files, they will be renamed with a `.old` suffix, e.g., `$HOME/foo/bar.zsh.old`.
+Configuration files are linked automatically using `ln`. Files within the `home` directory in each topic will be symbolically linked from `$HOME` in the same file structure. For example, `topic/home/foo/bar.zsh` will be symbolically linked at `$HOME/foo/bar.zsh`. If there are existing files that conflict with the linked files, they will be renamed with a `.old` suffix, e.g., `$HOME/foo/bar.zsh.old`.
 
 ### Installation Scripts
 
@@ -61,41 +61,3 @@ On GitHub, navigate to `Settings > Codespaces`, tick `Automatically install dotf
 ### VSCode devcontainers
 
 In VSCode, navigate to `Settings > User > Extensions > Dev Containers`, and populate `Dotfiles: Repository`.
-
-## Performance
-
-Results from benchmarking with [zsh-bench](https://github.com/romkatv/zsh-bench) on a 2020 M1 MacBook Air:
-
-### Vanilla (same plugins, loaded manually onto a bare .zshrc)
-
-    first_prompt_lag_ms=13.259
-    first_command_lag_ms=101.214
-    command_lag_ms=13.800
-    input_lag_ms=7.491
-    exit_time_ms=39.214
-
-### ndunnett/dotfiles
-
-    first_prompt_lag_ms=20.456
-    first_command_lag_ms=106.819
-    command_lag_ms=5.379
-    input_lag_ms=7.171
-    exit_time_ms=38.615
-
-### Oh-My-Zsh (same plugins, loaded by framework)
-
-    first_prompt_lag_ms=292.866
-    first_command_lag_ms=302.503
-    command_lag_ms=86.253
-    input_lag_ms=7.472
-    exit_time_ms=100.290
-
-### Comparison relative to vanilla
-
-|  | Vanilla | ndunnett/dotfiles | Oh-My-Zsh |
-|---|---|---|---|
-| first_prompt_lag_ms | 100% | 154% | 2208% |
-| first_command_lag_ms | 100% | 106% | 299% |
-| command_lag_ms | 100% | 39% | 625% |
-| input_lag_ms | 100% | 96% | 100% |
-| exit_time_ms | 100% | 98% | 256% |
