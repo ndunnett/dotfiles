@@ -10,7 +10,6 @@
       "configureZshAsDefaultShell": true,
       "username": "dev"
     },
-    "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers-contrib/features/wget-apt-get:1": {}
+    "ghcr.io/devcontainers/features/git:1": {}
   }
 }

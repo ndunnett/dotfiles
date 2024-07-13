@@ -22,28 +22,6 @@ zsh "$DOTFILES_HOME/scripts/insert_env.zsh" "DOTFILES_HOME" "$DOTFILES_HOME" && 
 # disable global compinit
 zsh "$DOTFILES_HOME/scripts/insert_env.zsh" "skip_global_compinit" "1" && changes_made="yes"
 
-# install Starship
-if [ ! -x "$DOTFILES_HOME/bin/starship" ]; then
-  wait
-  echo "[dotfiles] installing Starship..."
-
-  if [ -x "$(command -v curl)" ]; then
-    download="curl -sS"
-  elif [ -x "$(command -v wget)" ]; then
-    download="wget -qO -"
-  elif [ -x "$(command -v fetch)" ]; then
-    download="fetch -qo -"
-  fi
-
-  if [ -n "$download" ]; then
-    mkdir -p "$DOTFILES_HOME/bin"
-    $download https://starship.rs/install.sh | sh -s -- -f -b "$DOTFILES_HOME/bin" 1>/dev/null &
-    changes_made="yes"
-  else
-    echo "[dotfiles] failed to install, no http downloader available"
-  fi
-fi
-
 # run install.zsh for zsh
 if [ -d "$DOTFILES_HOME/zsh" ] && [ -e "$DOTFILES_HOME/zsh/install.zsh" ]; then
   echo "[dotfiles] installing zsh..."
