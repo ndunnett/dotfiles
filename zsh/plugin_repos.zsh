@@ -5,6 +5,5 @@ export plugin_repos=(
   zimfw/ssh
   zdharma/fast-syntax-highlighting
   zsh-users/zsh-autosuggestions
-  desyncr/auto-ls
   arzzen/calc.plugin.zsh
 )

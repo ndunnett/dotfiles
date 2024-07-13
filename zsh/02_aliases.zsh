@@ -14,6 +14,9 @@ alias grep="grep --color=auto"
 alias fgrep="fgrep --color=auto"
 alias egrep="egrep --color=auto"
 
+# Automatically call ls after cd
+alias cd=auto_ls
+
 # Print each PATH entry on a separate line
 alias path="echo ${PATH} | sed \"s|:|\\n|g\""
 
